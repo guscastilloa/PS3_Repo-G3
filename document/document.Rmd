@@ -1,0 +1,70 @@
+---
+title: 'Problem Set 3: Making Money with ML?'
+author:
+- Gustavo Adolfo Castillo Álvarez (201812166),
+- Alexander Almeida Ramírez (202225165),
+- Jorge Luis Congacha Yunda (201920042) y
+- Jaime Orlando Buitrago González (200612390)
+date: "`r Sys.Date()`"
+output:
+  bookdown::pdf_document2:
+    number_sections: true
+    toc: false
+    fig_width: 3
+    fig_height: 2
+    fig_caption: true
+
+fontsize: 11pt
+geometry: margin=1in
+documentclass: article
+papersize: letter
+lang: es
+colorlinks: true
+header-includes:
+  - \usepackage[utf8]{inputenc}
+  - \usepackage{hyperref}
+  - \hypersetup{urlcolor = blue, citecolor = blue,linkcolor=blue}
+  - \usepackage{floatrow}
+  - \floatsetup[figure]{capposition=top}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{dcolumn}
+  - \usepackage{float}
+
+subtitle: Big Data y Machine Learning para Economía Aplicada
+bibliography: References.bib
+---
+
+```{r setup, include=FALSE}
+require(here)
+knitr::opts_chunk$set(echo = TRUE, fig.pos = 'H')
+
+fix_textable_ref <- function(refname, tex_table){
+  s <- paste0(fixed("\\caption\\{(\\\\#tab:"), refname, ")")
+  o <- gsub("\\caption\\{", s,tex_table)
+  o
+  }
+
+#source("../scripts/00_packages.R", local = knitr::knit_global())
+#library(ggplot2)
+here::set_here(path = "../")
+source(here("scripts","00_packages.R"), local = knitr::knit_global())
+```
+
+# Datos y Métodos
+
+Los datos principales consistieron en los archivos descargados de la página de datos de la [competencia en Kaggle](https://www.kaggle.com/competitions/uniandes-bdml-202410-ps3).  competencia.
+
+
+Características de la propiedad:
+
+- Precio
+- Fecha de publicación de clasificado
+- Superficie total y superficie cubierta (80% y 76% valores faltantes)
+- Número de habitaciones
+- Número de baños
+- Tipo de propiedad: apartamento o casa
+- Ubicación georreferenciada
+
+Cara
