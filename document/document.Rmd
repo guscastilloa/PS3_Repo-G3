@@ -67,4 +67,7 @@ Características de la propiedad:
 - Tipo de propiedad: apartamento o casa
 - Ubicación georreferenciada
 
-Cara
+Spatial Ammenities:
+- parques 
+- tiendas o centros comerciales
+- 
