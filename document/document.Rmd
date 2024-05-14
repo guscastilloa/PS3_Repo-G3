@@ -36,7 +36,7 @@ subtitle: Big Data y Machine Learning para Economía Aplicada
 bibliography: References.bib
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE}
 require(here)
 knitr::opts_chunk$set(echo = TRUE, fig.pos = 'H')
 
@@ -51,10 +51,21 @@ fix_textable_ref <- function(refname, tex_table){
 here::set_here(path = "../")
 source(here("scripts","00_packages.R"), local = knitr::knit_global())
 ```
+```{r input_data, include=FALSE, echo=FALSE}
+sf_db <- st_read(here("stores/raw/spatial_data/sf_db.gpkg"))
+loca <- st_read(here("stores/raw/spatial_data/GPKG_MR_V1223.gpkg"), layer = 'Loca')
+```
+
 
 # Datos y Métodos
 
 Los datos principales consistieron en los archivos descargados de la página de datos de la [competencia en Kaggle](https://www.kaggle.com/competitions/uniandes-bdml-202410-ps3).  competencia.
+
+La información espacial de referencia se tomó del Mapa de Referencia para Bogotá D.C. del Ideca disponible [aquí](https://www.ideca.gov.co/recursos/mapas/mapa-de-referencia-para-bogota-dc). Al cruzar la capa de los polígonos las localidades con la tabla de *test* observamos que 593 propiedades se encuentran fuera de Chapinero (Figura \@ref(fig:train-chapi-dots)), que es la localidad en la cuál se predecirán los precios de las viviendas. 
+
+```{r train-chapi-dots, echo=FALSE, message=FALSE, out.width="70%" , message=FALSE, fig.cap="Ubicación datos de validación", dpi=300}
+knitr::include_graphics(here('views/figures/train_dots.pdf'))
+```
 
 
 Características de la propiedad:
