@@ -13,6 +13,7 @@ p_load(
   stringi,
   # Spatial packages
   sf,
+  leaflet,
   spatialsample
   )
 
