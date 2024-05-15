@@ -14,7 +14,10 @@ p_load(
   # Spatial packages
   sf,
   leaflet,
-  spatialsample
+  spatialsample,
+  
+  # Machine learning
+  tidymodels
   )
 
 
