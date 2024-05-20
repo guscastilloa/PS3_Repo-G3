@@ -21,6 +21,7 @@ p_load(
   spatialsample,
   osmdata,
   tmaptools,
+  caret,
   
   # Machine learning
   tidymodels
