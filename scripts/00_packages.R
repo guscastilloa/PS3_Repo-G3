@@ -8,6 +8,7 @@ p_load(
   # Basic Functions
   arrow,
   sfheaders,
+  VIM,
   tidyverse,
   janitor,
   here,
