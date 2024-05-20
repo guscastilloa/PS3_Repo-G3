@@ -11,11 +11,13 @@ p_load(
   here,
   rio,
   stringi,
+  readr,
   # Spatial packages
   sf,
   leaflet,
   spatialsample,
   osmdata,
+  tmaptools,
   
   # Machine learning
   tidymodels
