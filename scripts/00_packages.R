@@ -15,6 +15,7 @@ p_load(
   sf,
   leaflet,
   spatialsample,
+  osmdata,
   
   # Machine learning
   tidymodels

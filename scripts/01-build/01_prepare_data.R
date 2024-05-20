@@ -11,6 +11,7 @@
 # 1. Preparara entorno -----
 rm(list=ls())
 gc()
+cat('\f')
 source("scripts/00_packages.R")
 here()
 
@@ -22,6 +23,11 @@ train$is_train <- TRUE
 validation$is_train <- FALSE
 
 db <- rbind(train, validation)
+
+# Guardar datos de ubicación central para plots
+latitud_central <- mean(db$lat)
+longitud_central <- mean(db$lon)
+
 
 # 3. Feature engineering -----
 # 3.1. Construir variables a partir de descripción -----
@@ -73,7 +79,7 @@ db <- db %>%
 db <- db %>%
   mutate(n_pisos_num = as.integer(stri_extract_first(n_pisos, regex="\\d+"))) %>% 
   mutate(n_pisos_num = case_when(
-    is.na(n_pisos_num) & property_type2=="Casa"~1,
+    is.na(n_pisos_num)~1,
     .default = n_pisos_num)) %>%
   mutate(n_pisos_num = if_else(n_pisos_num>10, 1, n_pisos_num))
   
@@ -91,10 +97,10 @@ db <- db %>%
   mutate(piso_numerico = as.integer(stri_extract_first(piso_info, regex= "\\d+"))) %>% 
   mutate(piso_numerico = ifelse(piso_numerico > 66, NA, piso_numerico)) %>%
   mutate(piso_numerico = ifelse(property_type2=="Casa", 1, piso_numerico))
-  
-
 db <- db %>%
   mutate(piso_numerico = replace_na(piso_numerico, 1))
+
+
 ggplot(db %>% filter(piso_numerico>1), aes(x = factor(piso_numerico))) +
   geom_bar() +
   labs(title = "", x = "Pisos", y = "Obs")+
@@ -104,7 +110,6 @@ ggplot(db %>% filter(piso_numerico>1), aes(x = factor(piso_numerico))) +
 # 4. Incluir datos espaciales -----
 sf_db <- st_as_sf(db, coords = c('lon', 'lat'), crs =  4686)
 
-fname <- system.file("stores/raw/spatial_data/GPKG_MR_V1223.gpkg", package = 'sf')
 loca <- st_read("stores/raw/spatial_data/GPKG_MR_V1223.gpkg", layer = 'Loca')
 
 ggplot()+
@@ -133,9 +138,46 @@ ggplot()+
 ggsave("views/figures/train_dots.pdf",plot = last_plot(), 
        width = 10, height = 16, units = 'cm')
 
-# X. Missing data ------
 
-# X. Export -----
+## 4.1. Distancia a OSM Parks -------
+# Extraemos la info de todos los parques de Bogotá
+parques <- opq(bbox = getbb("Bogota Colombia")) %>%
+  add_osm_feature(key = "leisure" , value = "park") 
+# Cambiamos el formato para que sea un objeto sf (simple features)
+parques_sf <- osmdata_sf(parques)
+
+# De las features del parque nos interesa su geomoetría y donde estan ubicados 
+parques_geometria <- parques_sf$osm_polygons %>% 
+  dplyr::select(osm_id, name) 
+
+# Guardemos los poligonos de los parques 
+parques_geometria <- st_as_sf(parques_sf$osm_polygons)
+
+# Calculamos el centroide de cada parque para aproximar su ubciacion como un solo punto 
+centroides <- st_centroid(parques_geometria, byid = T)
+centroides <- centroides %>%
+  mutate(x=st_coordinates(centroides)[, "X"]) %>%
+  mutate(y=st_coordinates(centroides)[, "Y"]) 
+centroides_sf <- st_as_sf(centroides, coords = c("x", "y"), crs=4686)
+centroides_sf <- st_transform(centroides_sf, crs=4686)
+
+# Validar ubicación de los parques manualmente
+leaflet() %>%
+  addTiles() %>%
+  setView(lng = longitud_central, lat = latitud_central, zoom = 12) %>%
+  addPolygons(data = parques_geometria, col = "red",weight = 10,
+              opacity = 0.8, popup = parques_geometria$name) %>%
+  addCircles(data = centroides_sf,
+             col = "darkblue", opacity = 0.5, radius = 1)
+
+
+dist_matrix <- st_distance(x = sf_db, y = centroides_sf)
+dim(dist_matrix)
+dist_min <- apply(dist_matrix, 1, min)  
+
+sf_db <- sf_db %>% mutate(distancia_parque = dist_min)
+
+# 5. Exportar  -----
 arrow::write_parquet(
   st_drop_geometry(sf_db) %>% select(-c(SHAPE_Leng, SHAPE_Area)),
   sink = "stores/db.parquet")
