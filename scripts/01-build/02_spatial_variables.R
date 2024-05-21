@@ -42,6 +42,102 @@ filtro <- is.na(db$lat) | is.na(db$lon)
 db <- db[!filtro, ]
 
 
+# Distancia a un gimnasio ----------------------------------------------------------
+db<-st_as_sf(db,coords=c("lon","lat"),crs=4326,remove=FALSE) #as an sf object
+Gym <- opq(bbox = getbb("Bogota Colombia")) %>%
+  add_osm_feature(key = "leisure" , value = "fitness_centre") 
+Gym_sf <- osmdata_sf(Gym)
+Gym_geometria <- Gym_sf$osm_polygons %>% 
+  select(osm_id, name)
+
+#Busco la geometría más cercana
+cercano <- st_nearest_feature(db,Gym_geometria)
+#calculo la distancia
+dist <-st_distance(db, Gym_geometria[cercano,], by_element=TRUE)
+dist
+db$distancia_gimnasio<-dist
+
+## Distancia a estaciones de TR ------------------------------------------
+transmi <- opq(bbox = getbb("Bogota Colombia")) %>%
+  add_osm_feature(key = "amenity" , value = "bus_station") 
+transmi_sf <- osmdata_sf(transmi)
+transmi_geometria <- transmi_sf$osm_polygons %>% 
+  select(osm_id, name)
+
+#Busco la geometría más cercana
+cercano <- st_nearest_feature(db,transmi_geometria)
+#calculo la distancia
+dist <-st_distance(db, transmi_geometria[cercano,], by_element=TRUE)
+db$distancia_transmi<-dist
+
+#Distancia a Cai. 
+cai <- opq(bbox = getbb("Bogota Colombia")) %>%
+  add_osm_feature(key = "amenity" , value = "police") 
+cai_sf <- osmdata_sf(cai)
+cai_geometria <- cai_sf$osm_polygons %>% 
+  select(osm_id, name)
+
+#Busco la geometría más cercana
+cercano <- st_nearest_feature(db,cai_geometria)
+#calculo la distancia
+dist <-st_distance(db, cai_geometria[cercano,], by_element=TRUE)
+db$distancia_cai<-dist
+
+
+#Distancia a bares. 
+bar <- opq(bbox = getbb("Bogota Colombia")) %>%
+  add_osm_feature(key = "amenity" , value = "bar") 
+bar_sf <- osmdata_sf(bar)
+bar_geometria <- bar_sf$osm_polygons %>% 
+  select(osm_id, name)
+
+#Busco la geometría más cercana
+cercano <- st_nearest_feature(db,bar_geometria)
+#calculo la distancia
+dist <-st_distance(db, bar_geometria[cercano,], by_element=TRUE)
+db$distancia_bar<-dist
+
+
+# Distancia a supermercados ----------------------------------------------------------
+SM <- opq(bbox = getbb("Bogota Colombia")) %>%
+  add_osm_feature(key = "shop" , value = "supermarket") 
+SM_sf <- osmdata_sf(SM)
+SM_geometria <- SM_sf$osm_polygons %>% 
+  select(osm_id, name)
+
+#Busco la geometría más cercana
+cercano <- st_nearest_feature(db,SM_geometria)
+#calculo la distancia
+dist <-st_distance(db, SM_geometria[cercano,], by_element=TRUE)
+db$distancia_SM<-dist
+
+#Distancia a colegios 
+colegios <- opq(bbox = getbb("Bogota Colombia")) %>%
+  add_osm_feature(key = "amenity" , value = "school") 
+colegios_sf <- osmdata_sf(colegios)
+colegios_geometria <- colegios_sf$osm_polygons %>% 
+  select(osm_id, name)
+
+
+#Busco la geometría más cercana
+cercano <- st_nearest_feature(db,colegios_geometria)
+#calculo la distancia
+dist <-st_distance(db,colegios_geometria[cercano,], by_element=TRUE)
+db$distancia_colegio<-dist
+
+# Distancia a hospitales ----------------------------------------------------------
+hospitales <- opq(bbox = getbb("Bogota Colombia")) %>%
+  add_osm_feature(key = "amenity" , value = "hospital") 
+hospitales_sf <- osmdata_sf(hospitales)
+hospitales_geometria <- hospitales_sf$osm_polygons %>% 
+  select(osm_id, name)
+
+#Busco la geometría más cercana
+cercano <- st_nearest_feature(db,hospitales_geometria)
+#calculo la distancia
+dist <-st_distance(db,hospitales_geometria[cercano,], by_element=TRUE)
+db$distancia_hospitales<-dist
+
 ##DISTANCIA A AVENIDAS MAS CERCANAS---------------------------------
 
 db<-st_as_sf(db,coords=c("lon","lat"),crs=4326,remove=FALSE) #as an sf object
@@ -108,11 +204,9 @@ db$distancia_universidad<-dist_uni
 #Exportar las bases de datos. 
 class(db)
 db_df<-sf_to_df(db, fill = TRUE)
-class(train_df)
-db_df<-select(db,"property_id", "distancia_avenida_principal", "distancia_comercial","distancia_universidad")
-class(db_df)
-
-
+db_df<-select(db,"property_id","distancia_gimnasio","distancia_transmi","distancia_cai",
+              "distancia_bar","distancia_SM","distancia_colegio","distancia_hospitales",
+              "distancia_avenida_principal", "distancia_comercial","distancia_universidad")
 
 #Cargar la base de datos principal y unirla con esta base de datos. 
 datos<-read_parquet("stores/db.parquet")
