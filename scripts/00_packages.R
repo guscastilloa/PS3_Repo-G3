@@ -15,6 +15,7 @@ p_load(
   rio,
   stringi,
   readr,
+  skimr,
   # Spatial packages
   sf,
   leaflet,
