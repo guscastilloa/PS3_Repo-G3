@@ -53,6 +53,14 @@ datos <- datos %>%
            if_else(is.na(surface_total), median(surface_total, na.rm = T),
                    surface_total))
 
+
+# Export -------
+train <- import("stores/raw/train.csv")
+validation <- import("stores/raw/test.csv") # doesn't have price tag
+train$is_train <- TRUE
+validation$is_train <- FALSE
+temp <- rbind(train, validation) %>% select(property_id, lon, lat)
+datos <- left_join(x = datos, y = temp, by = 'property_id')
 arrow::write_parquet(datos, sink = "stores/db3.parquet")
 
 #Imputar datos: KNN (esto se me demora mucho. Lo descarto por el momento para empezar ya 
