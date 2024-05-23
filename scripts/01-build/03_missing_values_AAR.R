@@ -2,8 +2,8 @@
 # FECHA:
 #   2024-05-15 (ISO 8601)
 # AUTOR:
-#   Gustavo Castillo
-#   ga.castillo@uniandes.edu.co
+#   Gustavo Castillo | ga.castillo@uniandes.edu.co
+#   Alexander Almeida
 # DESCRIPCION:
 #   Diferentes estrategias de lidiar con valores faltantes.
 #=============================================================================#
@@ -20,24 +20,44 @@ datos<-read_parquet("stores/db2.parquet")
 
 
 #Revisar los valores faltantes. 
-db_miss <- skim(datos) %>% select( skim_variable, n_missing)
-library(skimr)
+db_miss <- skimr::skim(datos) %>% select( skim_variable, n_missing)
 Nobs= nrow(datos) 
 Nobs
 db_miss<- db_miss %>% mutate(p_missing= n_missing/Nobs)
 head(db_miss)
 
 #Imputación manual. Lo voy a hacer con el promedio. 
-datos$rooms[is.na(datos$rooms)] <- mean(datos$rooms, na.rm = T)
-datos$surface_covered[is.na(datos$surface_covered)] <- mean(datos$surface_covered, na.rm = T)
-datos$ bathrooms[is.na(datos$bathrooms)] <- mean(datos$bathrooms, na.rm = T)
-datos$surface_total[is.na(datos$surface_total)] <- mean(datos$surface_total, na.rm = T)
+datos <- datos %>% 
+  mutate(rooms_mean = 
+           if_else(is.na(rooms), mean(rooms, na.rm = T), rooms),
+         surface_covered_mean = 
+           if_else(is.na(surface_covered), mean(surface_covered, na.rm =T),
+                   surface_covered),
+         bathrooms_mean = 
+           if_else(is.na(bathrooms), mean(bathrooms, na.rm = T),
+                   bathrooms),
+         surface_total_mean = 
+           if_else(is.na(surface_total), mean(surface_total, na.rm = T),
+                   surface_total))
+
+# Imputar con la mediana
+datos <- datos %>% 
+  mutate(rooms_median = if_else(is.na(rooms), median(rooms, na.rm = T), rooms),
+         surface_covered_median = 
+           if_else(is.na(surface_covered), median(surface_covered, na.rm =T),
+                   surface_covered),
+         bathrooms_median = 
+           if_else(is.na(bathrooms), median(bathrooms, na.rm = T),
+                   bathrooms),
+         surface_total_median = 
+           if_else(is.na(surface_total), median(surface_total, na.rm = T),
+                   surface_total))
 
 arrow::write_parquet(datos, sink = "stores/db3.parquet")
 
 #Imputar datos: KNN (esto se me demora mucho. Lo descarto por el momento para empezar ya 
 #a correr modelos.)
-#datos <-  kNN(datos, variable = c("bathrooms"), k = 6)
+# datos <-  kNN(datos, variable = c("bathrooms"), k = 6)
 #datos$bathrooms <- round(datos$bathrooms,0)
 #summary(datos$bathrooms)
 
