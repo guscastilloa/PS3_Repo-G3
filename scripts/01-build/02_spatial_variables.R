@@ -206,7 +206,7 @@ class(db)
 db_df<-sf_to_df(db, fill = TRUE)
 db_df<-select(db,"property_id","distancia_gimnasio","distancia_transmi","distancia_cai",
               "distancia_bar","distancia_SM","distancia_colegio","distancia_hospitales",
-              "distancia_avenida_principal", "distancia_comercial","distancia_universidad")
+              "distancia_avenida_principal", "distancia_comercial","distancia_universidad","lat","lon")
 
 #Cargar la base de datos principal y unirla con esta base de datos. 
 datos<-read_parquet("stores/db.parquet")
