@@ -65,6 +65,9 @@ datos <-  kNN(datos, variable = c("rooms"), k = 6)
 #datos$bathrooms <- round(datos$rooms,0)
 #summary(datos$bathrooms)
 
+# Factor variables ----------
+datos$LocCodigo <- as.factor(datos$LocCodigo)
+
 # Export -------
 train <- import("stores/raw/train.csv")
 validation <- import("stores/raw/test.csv") # doesn't have price tag
