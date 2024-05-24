@@ -37,11 +37,11 @@ m2 <- as.formula(log(price) ~ surface_total + surface_covered + rooms +
                    distancia_colegio + distancia_hospitales + 
                    distancia_avenida_principal + distancia_comercial + 
                    distancia_universidad)
-set.seed(1985)  
 
+## M1 ----
+set.seed(1985)  
 tc_10cv <- trainControl(method = "cv", number = 10)
 
-# Spatial cross validation ---
 
 en1 <- train(
   m1, data = db_train,
@@ -54,24 +54,41 @@ en1 <- train(
 m1_out <- data.frame(property_id = db_test$property_id,
                      price = exp(predict(en1, newdata = db_test)))
 
+## M2: Spatial cross validation ----
 
 # model tuning with spatial cross validation #
-sp_ctrl <- trainControl(method = 'cv',
-                        index = folds)
 
 localidades_folds <- spatial_leave_location_out_cv(
   st_as_sf(db_train, coords = c('lon', 'lat'), crs = 4686),
   group = LocCodigo)
-walk()
+autoplot(localidades_folds)
 block_folds <- spatial_block_cv(
   st_as_sf(db_train,
            coords = c('lon', 'lat'), 
            crs = 4686),
   v = 5)
-walk(block_folds$splits, function(x) print(autoplot(x)))
-autoplot()
+
+# create indexes for localidades folds #
+folds_train<-list()
+for(i in 1:length(localidades_folds$splits)){
+  folds_train[[i]]<- localidades_folds$splits[[i]]$in_id
+}
+ctrl_spa <- trainControl(method = 'cv',
+                        index = folds_train)
+en_spa <- train(m1, data = db_train, method = 'glmnet', 
+                trControl = ctrl_spa, metric = 'MAE',
+                tuneGrid = expand.grid(alpha = seq(0, 1, by = 0.1), 
+                                       lambda = 10^seq(-3, 3, length = 60)))
+
+m2_out <- data.frame(property_id = db_test$property_id,
+                     price = exp(predict(en_spa, newdata = db_test)))
+ 
+
+
+
 
 ## Export ---- 
 export(m1_out, "stores/submissions/enet_g1.csv", sep = ',')
+export(m2_out, "stores/submissions/enet_spatialcv_g1.csv", sep = ',')
 
 # 4. Boosting -----
