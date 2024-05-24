@@ -53,6 +53,17 @@ datos <- datos %>%
            if_else(is.na(surface_total), median(surface_total, na.rm = T),
                    surface_total))
 
+#Imputar datos: KNN (esto se me demora mucho. Lo descarto por el momento para empezar ya 
+#a correr modelos.)
+datos <-  kNN(datos, variable = c("bathrooms"), k = 6)
+# datos$bathrooms <- round(datos$bathrooms,0)
+# summary(datos$bathrooms)
+
+datos <-  kNN(datos, variable = c("surface_covered"), k = 6)
+datos <-  kNN(datos, variable = c("surface_total"), k = 6)
+datos <-  kNN(datos, variable = c("rooms"), k = 6)
+#datos$bathrooms <- round(datos$rooms,0)
+#summary(datos$bathrooms)
 
 # Export -------
 train <- import("stores/raw/train.csv")
@@ -62,17 +73,3 @@ validation$is_train <- FALSE
 temp <- rbind(train, validation) %>% select(property_id, lon, lat)
 datos <- left_join(x = datos, y = temp, by = 'property_id')
 arrow::write_parquet(datos, sink = "stores/db3.parquet")
-
-#Imputar datos: KNN (esto se me demora mucho. Lo descarto por el momento para empezar ya 
-#a correr modelos.)
-# datos <-  kNN(datos, variable = c("bathrooms"), k = 6)
-#datos$bathrooms <- round(datos$bathrooms,0)
-#summary(datos$bathrooms)
-
-#datos <-  kNN(datos, variable = c("surface_covered"), k = 6)
-#datos <-  kNN(datos, variable = c("surface_total"), k = 6)
-
-#datos <-  kNN(datos, variable = c("rooms"), k = 6)
-#datos$bathrooms <- round(datos$rooms,0)
-#summary(datos$bathrooms)
-
