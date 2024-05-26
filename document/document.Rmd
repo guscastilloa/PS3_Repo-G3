@@ -105,7 +105,21 @@ Spatial Ammenities:
 - 
 # Modelo y resultados
 
+En esta sección se exponen los modelos que se utilizaron para predecir los precios de la vivienda en la localidad de Chapinero, las variables utilizadas en los modelos y la selección de hiperparámetros. En particular, se utilizaron los modelos de bosques, bosques aleatorios, regresión lineal, elasticnet y boosting para realizar la predicción. Finalmente, se presenta una comparación del rendimiento de estos modelos. El mejor resultado se obtuvo con el modelo de Random Forest utilizando como métrica el Mean Absolute Error metric (MAE).  
+
+## Descripción de variables
+Para todos los modelos utilizados para la predicción, se utilizó el siguiente modelo: 
+
+escribir modelo. 
+
+Las variables utilizadas para predecir el precio de las viviendas se pueden dividir en dos grupos. El primero, corresponde a variables que capturan atributos estructurales de las viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. Estas variables El segundo grupo está conformado por aspectos del vencidario como 
+
+## Descripción del modelo
+
+## Comparativa con otros modelos
+
 # Conclusiones
+El presente estudio realizó un 
 
 # Referencias bibliográficas
 
