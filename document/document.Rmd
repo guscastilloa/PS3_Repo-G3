@@ -13,7 +13,8 @@ output:
     fig_width: 3
     fig_height: 2
     fig_caption: true
-
+    
+    
 fontsize: 11pt
 geometry: margin=1in
 documentclass: article
@@ -34,6 +35,9 @@ header-includes:
 
 subtitle: Big Data y Machine Learning para Economía Aplicada
 bibliography: References.bib
+nocite: '@*'
+csl: apa.csl
+
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
@@ -52,11 +56,27 @@ here::set_here(path = "../")
 source(here("scripts","00_packages.R"), local = knitr::knit_global())
 ```
 ```{r input_data, include=FALSE, echo=FALSE}
-sf_db <- st_read(here("stores/raw/spatial_data/sf_db.gpkg"))
-loca <- st_read(here("stores/raw/spatial_data/GPKG_MR_V1223.gpkg"), layer = 'Loca')
+#sf_db <- st_read(here("stores/raw/spatial_data/sf_db.gpkg"))
+#loca <- st_read(here("stores/raw/spatial_data/GPKG_MR_V1223.gpkg"), layer = 'Loca')
 ```
 
 # Introducción
+
+En su \textit{paper}, @rosen proporciona una aproximación metodológica (econométrica) para estimar precios hedónicos. Más específicamente, explora los equilibrios del mercado y las decisiones de los agentes y los efectos en el bienestar para evidenciar la relación entre los precios de los bienes y sus diferentes características. Esta fue una contribución importante para estimar los precios (Hedónicos) de los bienes a partir de las características o atributos (precios implícitos) a partir de la observación de los precios de bienes heterogéneos sus características asociadas.
+
+Como uno de los \textit{papers} más citados del \textit{Journal of Political Economy} [@greenstone], se obtiene una aproximación al comportamiento de la oferta y demanda (equilibro) a partir del proceso generador de datos entre los bienes y sus características. Para el mercado inmobiliario -en el que los comportamientos de los agentes, oferta y demanda, y equilibrios no se pueden explicar en su totalidad con la teoría microeconómica convencional-, esta aproximación ha sido de singular importancia, más aún en el contexto de la ciudad de Bogotá.
+
+Así por ejemplo, @perdomo utiliza los precios hedónicos cómo método econométrico para estimar el precio de las viviendas y posteriormente el de la cercanía a Transmileno; @carriazo identifican cómo de no incluir la calidad del aire en las estimación a través de precio hedónicos conlleva un sesgo en los precios de las viviendas en Bogotá. @lozano utilizan variables espaciales en los submercados de la viviendas para estimar los precios en Bogotá, identificando una gran capacidad predictiva, pero afectada (sobre estimación) por los estratos socioeconómicos. También se encuentran @medina quienes demuestran como los subsidios aplicados a las tarifas de los servicios públicos se transfieren al precio de las viviendas.
+
+Esta breve exploración bibliográfica refleja los usos y potencialidades de la contribución de @rosen al mercado inmobiliario con énfasis en la ciudad de Bogotá. Claro está, como la capital de Colombia, Bogotá es una ciudad heterogénea con dinámicas poblacionales, sociales y económicas distribuidas a por todo el territorio urbano, las cuales pueden afectar los precios del mercado inmobiliario. Más aun, en una localidad como Chapinero, la cual es una de las áreas centrales de la ciudad; con una gran catnidad de población flotante; donde se cuenta con vías que se conectan con el sistema de movilidad de la ciudad; se tienen usos del suelo asociados a actividades comerciales y residenciales; y se tienen parques, canales y corredores ecológicos (Decreto 468, 2006).
+
+Por estas características, tal vez Chapinero sea la localidad con la mayor complejidad de formas de habitar el territorio de la ciudad del país, lo cual la hace un espacio geográfico donde convergen múltiples factores que afectan los precios de las viviendas. Por tal razón, construir uno o varios modelos predictivos de los precios es desafiante y una necesidad, ante una potencial inversión que compre la mayor cantidad de predios, gastando lo menos posible.
+
+Ahora bien, para construir el o los modelos se utilizó una muestra de los anuncios publicados en la página web \href{ https://www.properati.com.co/}{Properati}. Este sitio web de origen argentino y con presencia en varios países de Latinoamérica, le permite a propietarios publicar un bien inmueble con la mayor cantidad de información (precio, características y amenidades, ubicación y descripción), y a personas interesadas en adquirir o arrendar un bien contactarse con el comprador. Es decir, se utilizó una página web que ofrece servicios de intermediación, pero que permite caracterizar la oferta de bienes en Bogotá.
+
+De igual manera, se utilizó la información de la página web Infraestructura de Datos Espaciales de Bogotá (Ideca), un portal de libre acceso y consulta de la Unidad Administrativa Especial de Catastro Distrital  (UAECD), la cual permitió asociar información geográfica relevante a la muestra de \href{ https://www.properati.com.co/}{Properati}.
+
+
 
 # Datos y Métodos
 
@@ -84,10 +104,20 @@ Spatial Ammenities:
 - tiendas o centros comerciales
 - 
 # Modelo y resultados
+
 # Conclusiones
+
+# Referencias bibliográficas
+
+
+
+
+::: {#refs}
+:::
+
 # Repositorio
 
 El respositorio se puede consultar en el siguiente enlace:
-
-\href{https://github.com/guscastilloa/PS3_Repo-G3}{Problem Set 3: Making Money with ML?}
-
+\begin{itemize}
+  \item \href{https://github.com/guscastilloa/PS3_Repo-G3}{Problem Set 3: Making Money with ML?}
+\end{itemize}
