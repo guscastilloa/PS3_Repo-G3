@@ -56,6 +56,7 @@ sf_db <- st_read(here("stores/raw/spatial_data/sf_db.gpkg"))
 loca <- st_read(here("stores/raw/spatial_data/GPKG_MR_V1223.gpkg"), layer = 'Loca')
 ```
 
+# Introducción
 
 # Datos y Métodos
 
@@ -82,8 +83,11 @@ Spatial Ammenities:
 - parques 
 - tiendas o centros comerciales
 - 
+# Modelo y resultados
+# Conclusiones
+# Repositorio
 
+El respositorio se puede consultar en el siguiente enlace:
 
-# Apéndice
-## Repositorio GitHub
-https://github.com/guscastilloa/PS3_Repo-G3.git
+\href{https://github.com/guscastilloa/PS3_Repo-G3}{Problem Set 3: Making Money with ML?}
+
