@@ -96,32 +96,91 @@ La información espacial de referencia se tomó del Mapa de Referencia para Bogo
 knitr::include_graphics(here('views/figures/train_dots.pdf'))
 ```
 
-
-Características de la propiedad:
-
-- Precio
-- Fecha de publicación de clasificado
-- Superficie total y superficie cubierta (80% y 76% valores faltantes)
-- Número de habitaciones
-- Número de baños
-- Tipo de propiedad: apartamento o casa
-- Ubicación georreferenciada
-
-Spatial Ammenities:
-- parques 
-- tiendas o centros comerciales
-- 
 # Modelo y resultados
 
 En esta sección se exponen los modelos que se utilizaron para predecir los precios de la vivienda en la localidad de Chapinero, las variables utilizadas en los modelos y la selección de hiperparámetros. En particular, se utilizaron los modelos de bosques, bosques aleatorios, regresión lineal, elasticnet y boosting para realizar la predicción. Finalmente, se presenta una comparación del rendimiento de estos modelos. El mejor resultado se obtuvo con el modelo de Random Forest utilizando como métrica el Mean Absolute Error metric (MAE).  
 
-## Descripción de variables
+## Modelo y descripción de las variables
 Para todos los modelos utilizados para la predicción, se utilizó el siguiente modelo: 
 
-escribir modelo. 
+$$
+Precio= f(\text{características propias}, \text{características del vecindario},\text{variables temporales})
+$$
+Siguiendo a @mendieta, se utilizaron tres categorías de variables que capturan atributos que explican el precio de la vivienda. El primero, corresponde a variables que capturan características convencionales d elas viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. El segundo grupo está conformado por características del vecindario que corresponde a criterios de seguridad, por ejemplo, la distancia de la vivienda al Comando de Atención Inmediata(CAI), a criterios de servicios, como la distancia a parques, centros comeciales, instituciones educativas, y de accesibilidad de transporte, por ejemplo, distancia a la estación del transmilenio. Las variables de distancia fueron calculadas utilizando la paqueteria Osmadata del programa R. A continuación, se presenta una tabla con la descripción de las variables: 
 
-Las variables utilizadas para predecir el precio de las viviendas se pueden dividir en dos grupos. El primero, corresponde a variables que capturan atributos estructurales de las viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. Estas variables El segundo grupo está conformado por aspectos del vencidario como 
+```{r, results='asis', echo=FALSE}
+cat("
+\\begin{table}[ht]
+\\centering
+\\caption{Nombres de las variables y su descripción}
+\\begin{tabular}{|c|c|}
+\\hline
+Nombre de la variable & Descripción  \\\\
+\\hline
+rooms_median & Dato 2  \\\\
+\\hline
+bathrooms_median & Dato 5 \\\\
+\\hline
+surface_total_median & Dato 2  \\\\
+\\hline
+property_type & Dato 5 \\\\
+\\hline
+\\hline
+rooms_median & Dato 2  \\\\
+\\hline
+Dato 4 & Dato 5 \\\\
+\\hline
+\\hline
+rooms_median & Dato 2  \\\\
+\\hline
+Dato 4 & Dato 5 \\\\
+\\hline
+\\hline
+rooms_median & Dato 2  \\\\
+\\hline
+Dato 4 & Dato 5 \\\\
+\\hline
+\\hline
+rooms_median & Dato 2  \\\\
+\\hline
+distancia_parque & Dato 5 \\\\
+\\hline
+\\hline
+distancia_comercial & Dato 2  \\\\
+\\hline
+distancia_avenida_principal & Dato 5 \\\\
+\\hline
+\\hline
+distancia_universidad & Dato 2  \\\\
+\\hline
+distancia_cai & Dato 5 \\\\
+\\hline
+distancia_bar & Dato 5 \\\\
+\\hline
+distancia_gimnasio & Dato 5 \\\\
+\\hline
+distancia_transmi & Dato 5 \\\\
+\\hline
+distancia_bar & Dato 5 \\\\
+\\hline
+distancia_cai & Dato 5 \\\\
+\\hline
+distancia_SM & Dato 5 \\\\
+\\hline
+distancia_colegio & Dato 5 \\\\
+\\hline
+distancia_hospitales & Dato 5 \\\\
+\\hline
+month,year & Dato 5 \\\\
+\\hline
+lat,lon & Dato 5 \\\\
+\\hline
+\\end{tabular}
+\\end{table}
+")
+```
 
+             
 ## Descripción del modelo
 
 ## Comparativa con otros modelos
