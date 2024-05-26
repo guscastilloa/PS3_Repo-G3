@@ -5,7 +5,9 @@ Este es el repositorio del Grupo 3, conformado por Gustavo Adolfo Castillo Álva
 Este repositorio contiene tres carpetas:
 
 - `document`: Contiene el documento final en formato `pdf`. Este documento fue elaborado con `rmarkdown`. Por tanto, el lector puede replicar la manipulación de la base de datos, cálculos, estimaciones, gráficas,  tablas y en general todo el documento. 
-- `scripts`: Contiene todos los scripts preparados por los integrantes del grupo
+- `scripts`: Contiene todos los scripts preparados por los integrantes del grupo. Está conformado por dos subcarpetas:
+- `01 - build`: Contiene los scripts que limpian la base de datos y genera las nuevas variables.
+- `02 - analysis`: Contiene los scripts que ejecutan los modelos. 
 - `stores`: Contiene las bases de datos usadas para el desarrollo del Problem Set, incluyendo las bases de datos que se subieron en la plataforma kaggle. Para aquellas bases de datos muy grandes para ser incluídas en GitHub, se encuentra una descripción sobre como descargar o construir la base de datos.
 - `views`: Contiene todas las tablas, graficas, mapas o en general figuras utilizadas para el Problem Set.
 
