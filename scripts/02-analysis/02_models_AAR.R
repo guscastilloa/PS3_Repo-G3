@@ -33,7 +33,7 @@ db<- db%>%
          int9=distancia_bar*property_type3,
          int10=distancia_SM*property_type3,
          int11=distancia_colegio*property_type3,
-         int12=distancia_hospitales*¨property_type3)
+         int12=distancia_hospitales*property_type3)
 
 ####DIVIDIMOS LA MUESTRA EN TRAIN Y TEST
 test <- db %>% filter(is_train==F)
@@ -56,7 +56,7 @@ set.seed(1453)
 
 cv10<- trainControl(number = 10, method ="cv")
 
-arbol_1<-train(price ~ bedrooms + bathrooms + surface_total+ 
+arbol_1<-train(price ~ rooms_mean + bathrooms_mean + surface_total_mean+ 
                  property_type + distancia_parque+ distancia_comercial+ 
                  distancia_avenida_principal +
                  distancia_universidad,
@@ -68,7 +68,7 @@ pred_train_arbol_muestra<-predict(arbol_1, newdata=train_train)
 pred_test_arbol_muestra<-predict(arbol_1, newdata=test_train)
 
 pred_test_arbol<-predict(arbol_1, newdata=test)
-pred_test_arbol_round<- round(pred_test_forest, digits = -3)
+pred_test_arbol_round<- round(pred_test_arbol, digits = -3)
 
 test_k<-test%>%
   select(property_id)%>%
@@ -79,8 +79,6 @@ write_csv(test_k, file="stores/arboles_prediction.csv")
 
 ##RANDOM FOREST------------------------------------------------------------
 set.seed(1453)
-summary(train_muestra)
-
 #Cross validation V=10
 cv10<- trainControl(number = 10, method ="cv")
 tunegrid_rf<-expand.grid(mtry=c(2,3,4,5, 8), #Predictores aleatorios
