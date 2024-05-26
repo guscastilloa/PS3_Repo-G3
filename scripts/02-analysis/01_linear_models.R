@@ -79,7 +79,6 @@ en_spa <- train(m1, data = db_train, method = 'glmnet',
                 trControl = ctrl_spa, metric = 'MAE',
                 tuneGrid = expand.grid(alpha = seq(0, 1, by = 0.1), 
                                        lambda = 10^seq(-3, 3, length = 60)))
-
 m2_out <- data.frame(property_id = db_test$property_id,
                      price = exp(predict(en_spa, newdata = db_test)))
  
@@ -91,4 +90,58 @@ m2_out <- data.frame(property_id = db_test$property_id,
 export(m1_out, "stores/submissions/enet_g1.csv", sep = ',')
 export(m2_out, "stores/submissions/enet_spatialcv_g1.csv", sep = ',')
 
-# 4. Boosting -----
+# 4. Stochastic Gradient Boosting -----
+grid_gbm<-expand.grid(n.trees= c( 50, 100,150),
+                      interaction.depth=c(1,2),
+                      shrinkage=c(0.01),
+                      n.minobsinnode=c(5, 10))
+set.seed(1985) 
+gbm_tree <- train(m1,
+                  data = db_train, 
+                  method = "gbm", 
+                  trControl = ctrl_spa,
+                  tuneGrid=grid_gbm,
+                  metric = "MAE",
+                  verbose = T)            
+m3_out <- data.frame(property_id = db_test$property_id,
+                     price = exp(predict(gbm_tree, newdata = db_test)))
+
+## Export ----
+export(m3_out, "stores/submissions/gbm_spatialcv_g1.csv", sep = ',')
+
+# 5. Exreme Gradient Boosting -------
+grid_xbgoost <- expand.grid(nrounds = c(250,500),
+                            max_depth = c(1, 2),
+                            eta = c(0.1,  0.01), 
+                            gamma = c(0, 1), 
+                            min_child_weight = c(10, 25),
+                            colsample_bytree = c(0.4, 0.7), 
+                            subsample = c(0.7))
+grid_xbgoost
+
+## Export ----
+s <- Sys.time()
+exec_mod <- function(){
+  set.seed(1985) 
+  Xgboost_tree <- train(m1,
+                        data = db_train, 
+                        method = "xgbTree", 
+                        # trControl = ctrl_spa,
+                        trControl = trainControl(search = "random"), 
+                        tuneLength = 50,
+                        tuneGrid=grid_xbgoost,
+                        metric = "MAE",
+                        verbosity = 0)         
+  Xgboost_tree
+  }
+
+# CUIDADO CON ESTO! Revisar que tengan por lo menos 5 núcleos
+stopifnot(1==0)
+registerDoMC(cores=5)
+r <- exec_mod()
+
+m4_out <- data.frame(property_id = db_test$property_id,
+                     price = exp(predict(r, newdata = db_test)   ))
+
+## Export ----
+export(m4_out, "stores/submissions/xgbTree_randomsearch_g1.csv", sep = ',')

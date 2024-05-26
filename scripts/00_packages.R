@@ -25,7 +25,9 @@ p_load(
   caret,
   
   # Machine learning
-  tidymodels
+  tidymodels,
+  xgboost,
+  gbm
   )
 
 
