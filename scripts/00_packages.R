@@ -27,7 +27,8 @@ p_load(
   # Machine learning
   tidymodels,
   xgboost,
-  gbm
+  gbm,
+  SuperLearner
   )
 
 
