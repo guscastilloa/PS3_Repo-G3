@@ -82,3 +82,8 @@ Spatial Ammenities:
 - parques 
 - tiendas o centros comerciales
 - 
+
+
+# Apéndice
+## Repositorio GitHub
+https://github.com/guscastilloa/PS3_Repo-G3.git
