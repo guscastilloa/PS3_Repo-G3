@@ -117,31 +117,61 @@ grid_xbgoost <- expand.grid(nrounds = c(250,500),
                             min_child_weight = c(10, 25),
                             colsample_bytree = c(0.4, 0.7), 
                             subsample = c(0.7))
-grid_xbgoost
+
+grid_rforest <- expand.grid(
+  mtry=c(2,3,4,5,8))
 
 ## Export ----
-s <- Sys.time()
-exec_mod <- function(){
-  set.seed(1985) 
-  Xgboost_tree <- train(m1,
-                        data = db_train, 
-                        method = "xgbTree", 
-                        # trControl = ctrl_spa,
-                        trControl = trainControl(search = "random"), 
-                        tuneLength = 50,
-                        tuneGrid=grid_xbgoost,
-                        metric = "MAE",
-                        verbosity = 0)         
-  Xgboost_tree
+exec_mod <- function(sel_model){
+  set.seed(1985)
+  if (sel_model == "xgboost") {
+    Xgboost_tree <- train(m1,
+                          data = db_train, 
+                          method = "xgbTree", 
+                          # trControl = ctrl_spa,
+                          trControl = trainControl(search = "random", verboseIter = T), 
+                          tuneLength = 50,
+                          tuneGrid=grid_xbgoost,
+                          metric = "MAE",
+                          verbosity = 0,
+                          verbose = 1)         
+    Xgboost_tree
+  } else if (sel_model == "rf") {
+    print("Training random forest.")
+    randomforest <- train(m1,
+                          data = db_train, 
+                          method = "parRF", 
+                          trControl = trainControl(number = 10, method = 'cv', verboseIter = T), 
+                          tuneLength = 50,
+                          tuneGrid=grid_rforest,
+                          metric = "MAE",
+                          verbose = 1)         
+    randomforest
   }
+}
+
+
 
 # CUIDADO CON ESTO! Revisar que tengan por lo menos 5 núcleos
-stopifnot(1==0)
-registerDoMC(cores=5)
-r <- exec_mod()
+#stopifnot(1==0)
 
-m4_out <- data.frame(property_id = db_test$property_id,
+# Set the number of cores for parallelization
+num_cores <- 10
+
+# Initialize a parallel backend using doParallel
+cl <- makeCluster(num_cores)
+registerDoParallel(cl)
+
+#registerDoMC(cores=10)
+r <- exec_mod(sel_model = 'rf')
+
+stopCluster(cl)
+
+#m4_out <- data.frame(property_id = db_test$property_id,
+#                     price = exp(predict(r, newdata = db_test)   ))
+m5_out <- data.frame(property_id = db_test$property_id,
                      price = exp(predict(r, newdata = db_test)   ))
 
 ## Export ----
-export(m4_out, "stores/submissions/xgbTree_randomsearch_g1.csv", sep = ',')
+#export(m4_out, "stores/submissions/xgbTree_randomsearch_g1.csv", sep = ',')
+export(m5_out, "stores/submissions/randomforest_randomsearch_g1.csv", sep = ',')
