@@ -117,7 +117,6 @@ summary_list <- list()
 for (variable in var) {
   stats[[variable]] <- as.numeric(stats[[variable]])
   summary_data <- stats %>%
-    group_by(property_type) %>%
     summarise(mean = mean(!!sym(variable), na.rm = TRUE),
               sd = sd(!!sym(variable), na.rm = TRUE),
               min = min(!!sym(variable), na.rm = TRUE),
@@ -129,23 +128,33 @@ summary_list <- bind_rows(summary_list, .id = "variable")
 
 summary_list$variable <- factor(summary_list$variable,
                                 levels=var,
-                                labels=c("Precio (millones)","Área cubierta",
-                                         "Área total","Habitaciones","Baños",
+                                labels=c("Precio (millones)",
+                                         "Área cubierta ($km^2$)",
+                                         "Área total ($km^2$)",
+                                         "Habitaciones","Baños",
                                          "Dromitorios","Número de pisos", "Piso",
-                                         "Dist. parque", "Dist. Transmilenio",
-                                         "Dist. bar","Dist. colegio",
-                                         "Dist. avenida","Dist. universidad",
-                                         "Dist. gimnasio","Dist. CAI",
-                                         "Dist. supermercados",
-                                         "Dist. hospitales",
-                                         "Dist. centro comercial")
-                                )
-colnames(summary_list) <- c("Variable", "Tipo", "Promedio", "Desv. est.",
+                                         "Dist. parque ($km$)", 
+                                         "Dist. Transmilenio ($km$)",
+                                         "Dist. bar ($km$)",
+                                         "Dist. colegio ($km$)",
+                                         "Dist. avenida ($km$)",
+                                         "Dist. universidad ($km$)",
+                                         "Dist. gimnasio ($km$)",
+                                         "Dist. CAI($km$)",
+                                         "Dist. supermercados ($km$)",
+                                         "Dist. hospitales ($km$)",
+                                         "Dist. centro comercial ($km$)")
+)
+colnames(summary_list) <- c("Variable", "Promedio", "Desv. est.",
                             "Mín", "Máx.")
-knitr::kable(summary_list, align = "llcccc", digits=1, "latex", 
+knitr::kable(summary_list, align = "lcccc", digits=1, "latex", 
              caption = "Estadísticas descriptivas")%>%
       kable_styling(latex_options = "hold_position")
 ```
+
+Para la localidad de Chapinero, luego del procedimiento anterior, se obtuvo una base de datos con 10.000 observaciones. En total, se obtuvieron 9.702 (97\%) apartmentos y 298 (3\%) casas en venta. En promedio, los inmuebles fueron publicados a un precio de 847,1 millones, tienen 137,4$mt^2$ de área construida, 128,3$mt^2$ de área habitables, 2,4 habitaciones, 2,6 baños y 2,3 dormitorios. Las amenidades más cercanas son los parques a una distancia promedio de 159,9 metros, centros comerciales a de 246,9 metros y las avenidas a 230,2 metros. Las más lejanas son los bares a 1,1 km, seguido por los hospitales (830 m) y las estaciones de transmileno (801 m).
+
+Sobre este último hallazgo, esta oferta de bienes inmuebles puede estar caracterizada por casas o apartamentos más alejadas de las zonas con mayor flujo de población flotante. Al ser una localidad en la que en su centralidad alberga la mayor oferta de universidades de Bogotá, así como donde se desarrollan actividades comerciales, los inmuebles destinados a usos residenciales que se ofrecen en el mercado se encuentran más alejados de esta centralidad. Claro está, se tiene una heterogénea composición, pues como se observa en la tabla anterior aproximadante las desviaciones estándar de las distancias son la mitad de los valores promedio, y se obtienen distancia en un rango de entre 0 m 3 km.  
 
 
 # Modelo y resultados
@@ -158,6 +167,7 @@ Para todos los modelos utilizados para la predicción, se utilizó el siguiente 
 $$
 Precio= f(\text{características propias}, \text{características del vecindario},\text{variables temporales})
 $$
+
 Siguiendo a @mendieta, se utilizaron tres categorías de variables que capturan atributos que explican el precio de la vivienda. El primero, corresponde a variables que capturan características convencionales d elas viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. El segundo grupo está conformado por características del vecindario que corresponde a criterios de seguridad, por ejemplo, la distancia de la vivienda al Comando de Atención Inmediata(CAI), a criterios de servicios, como la distancia a parques, centros comeciales, instituciones educativas, y de accesibilidad de transporte, por ejemplo, distancia a la estación del transmilenio. Las variables de distancia fueron calculadas utilizando la paqueteria Osmadata del programa R. A continuación, se presenta una tabla con la descripción de las variables: 
 
 ```{r, results='asis', echo=FALSE}
