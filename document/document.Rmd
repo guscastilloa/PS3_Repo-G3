@@ -233,11 +233,11 @@ cat("
 \\caption{Comparativa con otros modelos}
 \\begin{tabular}{lcccccr}
 \\hline \\hline
-Estadística & Random Forest & RL & Linear Regression & Elastic Net & Boosting & Decision tree \\\\
+Estadística & Random Forest &  Linear Regression & Elastic Net & Boosting & Decision tree \\\\
 \\hline
-MAE (Kaggle) & 223834975 & 308749889 & 260870545 & 289260591 & 304528484 & 279848874 \\\\
-RMSE & 185392301 & 258160495 & 210281690 & 266505969 & 282794569 & 240176517 \\\\
-MAE(train) & 125757655 & 191380688 & 143548002 & 200055282 & 216060881 & 178784207 \\\\
+MAE (Kaggle) & 223834975 & 308749889 & 260870545 & 289260591 & 304528484  \\\\
+RMSE & 185392301 & 258160495 & 210281690 & 266505969 & 282794569 \\\\
+MAE(train) & 125757655 & 191380688 & 143548002 & 200055282 & 216060881 \\\\
 \\hline
 \\end{tabular}
 \\end{table}
