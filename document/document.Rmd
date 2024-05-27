@@ -183,13 +183,10 @@ cat("
 \\hline
 Nombre de la variable & Descripción  \\\\
 \\hline
-rooms_median & Número de habitaciones en la vivienda \\\\
-\\hline
 \\hline
 bathrooms\\_median & Número de baños de la vivienda \\\\
 \\hline
 surface\\_total\\_median & Área total de la vivienda  \\\\
-distancia_comercial & Dato 2  \\\\
 \\hline
 property\\_type & =1 si la vivienda corresponde a una casa \\\\
 distancia_avenida_principal & Dato 5 \\\\
