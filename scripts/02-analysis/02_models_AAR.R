@@ -238,6 +238,7 @@ linear_reg<-train(fmla,
 ) 
 
 
+
 ##Subida a Kaggle. 
 pred_test_reg<-predict(linear_reg, newdata=test)
 pred_test_reg_round<- round(pred_test_reg, digits = -3)
@@ -248,6 +249,112 @@ test_k<-test%>%
 test_k
 
 write_csv(test_k, file="OLS_ELASTICNET.csv")
+
+##ELASTIC NET---------------------------------------------------
+
+EN<-train(fmla,
+          data=train_train,
+          method = 'glmnet', 
+          trControl = fitControl,
+          tuneGrid = expand.grid(alpha = seq(0,1,by = 0.01), #grilla de alpha
+                                 lambda = seq(0.001,0.02,by = 0.001)),
+          preProcess = c("center", "scale")
+) 
+
+
+##Subida a Kaggle. 
+pred_test_elastic<-predict(EN, newdata=test)
+pred_test_elastic_round<- round(pred_test_elastic, digits = -3)
+
+test_k<-test%>%
+  select(property_id)%>%
+  mutate(price=pred_test_elastic_round)
+test_k
+
+write_csv(test_k, file="ELASTICNET.csv")
+
+
+#Elastic - net - v2. 
+EN2<-train(price ~ rooms_mean + bathrooms_mean + surface_total_mean+  property_type+
+             distancia_parque+ distancia_comercial+ 
+             distancia_avenida_principal + 
+             distancia_universidad+distancia_cai+distancia_bar+distancia_gimnasio
+           +distancia_transmi+distancia_bar+distancia_SM+distancia_colegio+
+             distancia_hospitales,
+           data=train_train,
+           method = 'glmnet', 
+           trControl = fitControl,
+           tuneGrid = expand.grid(alpha = seq(0,1,by = 0.01), #grilla de alpha
+                                  lambda = seq(0.001,0.02,by = 0.001)),
+           preProcess = c("center", "scale")
+) 
+
+
+##Subida a Kaggle. 
+pred_test_elastic<-predict(EN2, newdata=test)
+pred_test_elastic_round<- round(pred_test_elastic, digits = -3)
+
+test_k<-test%>%
+  select(property_id)%>%
+  mutate(price=pred_test_elastic_round)
+test_k
+
+write_csv(test_k, file="ELASTICNET_v2.csv")
+
+
+#v3
+EN3<-train(rooms_mean + bathrooms_mean + surface_total_mean+  property_type+
+             distancia_parque+ distancia_comercial+ 
+             distancia_avenida_principal + 
+             distancia_universidad+distancia_cai+distancia_bar+distancia_gimnasio
+           +distancia_transmi+distancia_bar+distancia_SM+distancia_colegio+
+             distancia_hospitales+month+year,
+           data=train_train,
+           method = 'glmnet', 
+           trControl = fitControl,
+           tuneGrid = expand.grid(alpha = seq(0,1,by = 0.01), #grilla de alpha
+                                  lambda = seq(0.001,0.02,by = 0.001)),
+           preProcess = c("center", "scale")
+) 
+
+
+##Subida a Kaggle. 
+pred_test_elastic<-predict(EN3, newdata=test)
+pred_test_elastic_round<- round(pred_test_elastic, digits = -3)
+
+test_k<-test%>%
+  select(property_id)%>%
+  mutate(price=pred_test_elastic_round)
+test_k
+
+write_csv(test_k, file="ELASTICNET_v3.csv")
+
+#V4
+EN4<-train(price ~ rooms_median + bathrooms_median + surface_total_median+  property_type+
+             distancia_parque+ distancia_comercial+ 
+             distancia_avenida_principal + 
+             distancia_universidad+distancia_cai+distancia_bar+distancia_gimnasio
+           +distancia_transmi+distancia_bar+distancia_SM+distancia_colegio+
+             distancia_hospitales+month+year+lat+lon,
+           data=train_train,
+           method = 'glmnet', 
+           trControl = fitControl,
+           tuneGrid = expand.grid(alpha = seq(0,1,by = 0.01), #grilla de alpha
+                                  lambda = seq(0.001,0.02,by = 0.001)),
+           preProcess = c("center", "scale")
+) 
+
+
+##Subida a Kaggle. 
+pred_test_elastic<-predict(EN4, newdata=test)
+pred_test_elastic_round<- round(pred_test_elastic, digits = -3)
+
+test_k<-test%>%
+  select(property_id)%>%
+  mutate(price=pred_test_elastic_round)
+test_k
+
+write_csv(test_k, file="ELASTICNET_v4.csv")
 
 #Probar el GBM.
 p_load(gbm)
@@ -310,7 +417,7 @@ ModeloGBM3 <- train(price ~ rooms_median + bathrooms_median + surface_total+prop
                       distancia_avenida_principal + 
                       distancia_universidad+distancia_cai+distancia_bar+distancia_gimnasio
                     +distancia_transmi+distancia_bar+distancia_SM+distancia_colegio+
-                      distancia_hospitales+month+year,
+                      distancia_hospitales+month+year+lat+lon,
                     data = train_train, 
                     method = "gbm", 
                     trControl = ctrl,
@@ -331,111 +438,7 @@ write_csv(test_k, file="Modelo_GBM_v3.csv")
 
 
 
-##ELASTIC NET---------------------------------------------------
 
-EN<-train(fmla,
-          data=train_train,
-          method = 'glmnet', 
-          trControl = fitControl,
-          tuneGrid = expand.grid(alpha = seq(0,1,by = 0.01), #grilla de alpha
-                                 lambda = seq(0.001,0.02,by = 0.001)),
-          preProcess = c("center", "scale")
-) 
-
-
-##Subida a Kaggle. 
-pred_test_elastic<-predict(EN, newdata=test)
-pred_test_elastic_round<- round(pred_test_elastic, digits = -3)
-
-test_k<-test%>%
-  select(property_id)%>%
-  mutate(price=pred_test_elastic_round)
-test_k
-
-write_csv(test_k, file="ELASTICNET.csv")
-
-
-#Elastic - net - v2. 
-EN2<-train(rooms_mean + bathrooms_mean + surface_total_mean+  property_type+
-            distancia_parque+ distancia_comercial+ 
-            distancia_avenida_principal + 
-            distancia_universidad+distancia_cai+distancia_bar+distancia_gimnasio
-          +distancia_transmi+distancia_bar+distancia_SM+distancia_colegio+
-            distancia_hospitales,
-          data=train_train,
-          method = 'glmnet', 
-          trControl = fitControl,
-          tuneGrid = expand.grid(alpha = seq(0,1,by = 0.01), #grilla de alpha
-                                 lambda = seq(0.001,0.02,by = 0.001)),
-          preProcess = c("center", "scale")
-) 
-
-
-##Subida a Kaggle. 
-pred_test_elastic<-predict(EN2, newdata=test)
-pred_test_elastic_round<- round(pred_test_elastic, digits = -3)
-
-test_k<-test%>%
-  select(property_id)%>%
-  mutate(price=pred_test_elastic_round)
-test_k
-
-write_csv(test_k, file="ELASTICNET_v2.csv")
-
-
-#v3
-EN3<-train(rooms_mean + bathrooms_mean + surface_total_mean+  property_type+
-            distancia_parque+ distancia_comercial+ 
-            distancia_avenida_principal + 
-            distancia_universidad+distancia_cai+distancia_bar+distancia_gimnasio
-          +distancia_transmi+distancia_bar+distancia_SM+distancia_colegio+
-            distancia_hospitales+month+year,
-          data=train_train,
-          method = 'glmnet', 
-          trControl = fitControl,
-          tuneGrid = expand.grid(alpha = seq(0,1,by = 0.01), #grilla de alpha
-                                 lambda = seq(0.001,0.02,by = 0.001)),
-          preProcess = c("center", "scale")
-) 
-
-
-##Subida a Kaggle. 
-pred_test_elastic<-predict(EN3, newdata=test)
-pred_test_elastic_round<- round(pred_test_elastic, digits = -3)
-
-test_k<-test%>%
-  select(property_id)%>%
-  mutate(price=pred_test_elastic_round)
-test_k
-
-write_csv(test_k, file="ELASTICNET_v3.csv")
-
-#V4
-EN4<-train(rooms_median + bathrooms_median + surface_total_median+  property_type+
-            distancia_parque+ distancia_comercial+ 
-            distancia_avenida_principal + 
-            distancia_universidad+distancia_cai+distancia_bar+distancia_gimnasio
-          +distancia_transmi+distancia_bar+distancia_SM+distancia_colegio+
-            distancia_hospitales+month+year+lat+lon,
-          data=train_train,
-          method = 'glmnet', 
-          trControl = fitControl,
-          tuneGrid = expand.grid(alpha = seq(0,1,by = 0.01), #grilla de alpha
-                                 lambda = seq(0.001,0.02,by = 0.001)),
-          preProcess = c("center", "scale")
-) 
-
-
-##Subida a Kaggle. 
-pred_test_elastic<-predict(EN4, newdata=test)
-pred_test_elastic_round<- round(pred_test_elastic, digits = -3)
-
-test_k<-test%>%
-  select(property_id)%>%
-  mutate(price=pred_test_elastic_round)
-test_k
-
-write_csv(test_k, file="ELASTICNET_v4.csv")
 
 
 ### Super Learner 
