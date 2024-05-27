@@ -20,6 +20,10 @@ datos<-read_parquet("stores/db2.parquet")
 datos_train <- datos %>% filter(is_train==T)
 datos_test <- datos %>% filter(is_train==F)
 
+# Factor variables ----------
+datos$LocCodigo <- as.factor(datos$LocCodigo)
+
+
 #Revisar los valores faltantes. 
 db_miss <- skimr::skim(datos) %>% select( skim_variable, n_missing)
 Nobs= nrow(datos) 
@@ -73,8 +77,6 @@ datos <-  kNN(datos, variable = c("rooms"), k = 6)
 #datos$bathrooms <- round(datos$rooms,0)
 #summary(datos$bathrooms)
 
-# Factor variables ----------
-datos$LocCodigo <- as.factor(datos$LocCodigo)
 
 # Export -------
 train <- import("stores/raw/train.csv")
