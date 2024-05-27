@@ -162,7 +162,7 @@ Para la localidad de Chapinero, luego del procedimiento anterior, se obtuvo una 
 Sobre este último hallazgo, esta oferta de bienes inmuebles puede estar caracterizada por casas o apartamentos más alejadas de las zonas con mayor flujo de población flotante. Al ser una localidad en la que en su centralidad alberga la mayor oferta de universidades de Bogotá, así como donde se desarrollan actividades comerciales, los inmuebles destinados a usos residenciales que se ofrecen en el mercado se encuentran más alejados de esta centralidad. Claro está, se tiene una heterogénea composición, pues como se observa en la tabla anterior aproximadante las desviaciones estándar de las distancias son la mitad de los valores promedio, y se obtienen distancia en un rango de entre 0 m 3 km.  
 
 ```{r grap01, echo=FALSE, message=FALSE, out.width="70%" , message=FALSE, fig.cap="Precio en M2 en Chapinero (precio por millones)", dpi=300}
-knitr::include_graphics('../views/g2.jpg')
+knitr::include_graphics('../views/g2.jpeg')
 ```
 
 # Modelo y resultados
