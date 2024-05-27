@@ -189,45 +189,33 @@ bathrooms\\_median & Número de baños de la vivienda \\\\
 surface\\_total\\_median & Área total de la vivienda  \\\\
 \\hline
 property\\_type & =1 si la vivienda corresponde a una casa \\\\
-distancia_avenida_principal & Dato 5 \\\\
+distancia\\_avenida_\\principal & Dato 5 \\\\
 \\hline
 distancia\\_parque & Distancia de la vivienda al parque más cercano \\\\
 \\hline
 distancia\\_comercial & Distancia de la vivienda al cento comercial más cercano \\\\
-distancia_universidad & Dato 2  \\\\
 \\hline
 distancia\\_avenida\\_principal & Distancia de la vivienda a la avenida principal\\\\
-distancia_cai & Dato 5 \\\\
 \\hline
 distancia\\_universidad & Distancia de la vivienda a la universidad más cercana \\\\
-distancia_bar & Dato 5 \\\\
 \\hline
 distancia\\_cai & Distancia de la vivienda al CAI de policía más cercano \\\\
-distancia_gimnasio & Dato 5 \\\\
 \\hline
 distancia\\_bar & Distancia de la vivienda al bar más cercano \\\\
-distancia_transmi & Dato 5 \\\\
 \\hline
 distancia\\_gimnasio & Distancia de la vivienda al gimnasio más cercano \\\\
-distancia_bar & Dato 5 \\\\
 \\hline
 distancia\\_transmi & Distancia de la vivienda a la estación de transmilenio más cercana \\\\
-distancia_cai & Dato 5 \\\\
 \\hline
 distancia\\_SM & Distancia de la vivienda al Supermercado más cercano \\\\
-distancia_SM & Dato 5 \\\\
 \\hline
 distancia\\_colegio & Distancia de la vivienda al colegio más cercano \\\\
-distancia_colegio & Dato 5 \\\\
 \\hline
 distancia\\_hospitales & Distancia de la vivienda al hospital más cercano \\\\
-distancia_hospitales & Dato 5 \\\\
 \\hline
 month,year & Año-mes  \\\\
-month,year & Dato 5 \\\\
 \\hline
 lat,lon & Coordenadas de geolocalización de la casa \\\\
-lat,lon & Dato 5 \\\\
 \\hline
 \\end{tabular}
 \\end{table}
@@ -239,6 +227,8 @@ lat,lon & Dato 5 \\\\
 
 
 ## Comparativa con otros modelos
+Además del modelo finalmente escogido, se ejecutaron otras técnicas para realizar la predicción de los precios de la vivienda en Chapinero. Se utilizaron para todos los otros modelos las mismas variables explicativas descritas en la tabla anexo. Se estimaron las siguientes técnicas adicionales al random forest: regresión lineal, Elastic net, Boosting y árboles de decisión. Para todos estos modelos, se utiliza un cross-validation con 10 particiones con el fin de 
+
 ```{r performance2, results='asis', echo=FALSE}
 cat("
 \\begin{table}[ht]
@@ -256,6 +246,8 @@ MAE(train) & 125757655 & 191380688 & 143548002 & 200055282 & 216060881 & 1787842
 \\end{table}
 ")
 ```
+
+
 
 # Conclusiones
 El presente estudio realizó un 

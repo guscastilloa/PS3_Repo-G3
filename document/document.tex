@@ -256,11 +256,9 @@ Precio= f(\text{características propias}, \text{características del vecindario
 \]
 \textless\textless\textless\textless\textless\textless\textless{} Updated upstream
 
-\hypertarget{siguiendo-a-mendieta-se-utilizaron-tres-categoruxedas-de-variables-que-capturan-atributos-que-explican-el-precio-de-la-vivienda.-el-primero-corresponde-a-variables-que-capturan-caracteruxedsticas-convencionales-d-elas-viviendas-como-el-nuxfamero-de-habitaciones-el-nuxfamero-de-bauxf1os-la-superficie-total-y-el-tipo-de-propiedad.-el-segundo-grupo-estuxe1-conformado-por-caracteruxedsticas-del-vecindario-que-corresponde-a-criterios-de-seguridad-por-ejemplo-la-distancia-de-la-vivienda-al-comando-de-atenciuxf3n-inmediatacai-a-criterios-de-servicios-como-la-distancia-a-parques-centros-comeciales-instituciones-educativas-y-de-accesibilidad-de-transporte-por-ejemplo-distancia-a-la-estaciuxf3n-del-transmilenio.-las-variables-de-distancia-fueron-calculadas-utilizando-la-paqueteria-osmadata-del-programa-r.-a-continuaciuxf3n-se-presenta-una-tabla-con-la-descripciuxf3n-de-las-variables}{%
-\section{Siguiendo a Mendieta López \& Perdomo (2007), se utilizaron tres categorías de variables que capturan atributos que explican el precio de la vivienda. El primero, corresponde a variables que capturan características convencionales d elas viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. El segundo grupo está conformado por características del vecindario que corresponde a criterios de seguridad, por ejemplo, la distancia de la vivienda al Comando de Atención Inmediata(CAI), a criterios de servicios, como la distancia a parques, centros comeciales, instituciones educativas, y de accesibilidad de transporte, por ejemplo, distancia a la estación del transmilenio. Las variables de distancia fueron calculadas utilizando la paqueteria Osmadata del programa R. A continuación, se presenta una tabla con la descripción de las variables:}\label{siguiendo-a-mendieta-se-utilizaron-tres-categoruxedas-de-variables-que-capturan-atributos-que-explican-el-precio-de-la-vivienda.-el-primero-corresponde-a-variables-que-capturan-caracteruxedsticas-convencionales-d-elas-viviendas-como-el-nuxfamero-de-habitaciones-el-nuxfamero-de-bauxf1os-la-superficie-total-y-el-tipo-de-propiedad.-el-segundo-grupo-estuxe1-conformado-por-caracteruxedsticas-del-vecindario-que-corresponde-a-criterios-de-seguridad-por-ejemplo-la-distancia-de-la-vivienda-al-comando-de-atenciuxf3n-inmediatacai-a-criterios-de-servicios-como-la-distancia-a-parques-centros-comeciales-instituciones-educativas-y-de-accesibilidad-de-transporte-por-ejemplo-distancia-a-la-estaciuxf3n-del-transmilenio.-las-variables-de-distancia-fueron-calculadas-utilizando-la-paqueteria-osmadata-del-programa-r.-a-continuaciuxf3n-se-presenta-una-tabla-con-la-descripciuxf3n-de-las-variables}}
+Siguiendo a Mendieta López \& Perdomo (2007), se utilizaron tres categorías de variables que capturan atributos que explican el precio de la vivienda. El primero, corresponde a variables que capturan características convencionales d elas viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. El segundo grupo está conformado por características del vecindario que corresponde a criterios de seguridad, por ejemplo, la distancia de la vivienda al Comando de Atención Inmediata(CAI), a criterios de servicios, como la distancia a parques, centros comeciales, instituciones educativas, y de accesibilidad de transporte, por ejemplo, distancia a la estación del transmilenio. Las variables de distancia fueron calculadas utilizando la paqueteria Osmadata del programa R. A continuación, se presenta una tabla con la descripción de las variables:
 
 Siguiendo a Mendieta López \& Perdomo (2007), se utilizaron tres categorías de variables que capturan atributos que explican el precio de la vivienda. El primero, corresponde a variables que capturan características convencionales d elas viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. El segundo grupo está conformado por características del vecindario que corresponde a criterios de seguridad, por ejemplo, la distancia de la vivienda al Comando de Atención Inmediata(CAI), a criterios de servicios, como la distancia a parques, centros comeciales, instituciones educativas, y de accesibilidad de transporte, por ejemplo, distancia a la estación del transmilenio. Las variables de distancia fueron calculadas utilizando la paqueteria Osmadata del programa R. El tercero, corresponde a factores de geolocalización,como la longitud y la latitud) y temporales, como el mes y el año, debido a que los precios pueden variar por el ciclo económico. A continuación, se presenta una tabla con la descripción de las variables:
-\textgreater\textgreater\textgreater\textgreater\textgreater\textgreater\textgreater{} Stashed changes
 
 \begin{table}[ht]
 \centering
@@ -275,45 +273,33 @@ bathrooms\_median & Número de baños de la vivienda \\
 surface\_total\_median & Área total de la vivienda  \\
 \hline
 property\_type & =1 si la vivienda corresponde a una casa \\
-distancia_avenida_principal & Dato 5 \\
+distancia\_avenida_\principal & Dato 5 \\
 \hline
 distancia\_parque & Distancia de la vivienda al parque más cercano \\
 \hline
 distancia\_comercial & Distancia de la vivienda al cento comercial más cercano \\
-distancia_universidad & Dato 2  \\
 \hline
 distancia\_avenida\_principal & Distancia de la vivienda a la avenida principal\\
-distancia_cai & Dato 5 \\
 \hline
 distancia\_universidad & Distancia de la vivienda a la universidad más cercana \\
-distancia_bar & Dato 5 \\
 \hline
 distancia\_cai & Distancia de la vivienda al CAI de policía más cercano \\
-distancia_gimnasio & Dato 5 \\
 \hline
 distancia\_bar & Distancia de la vivienda al bar más cercano \\
-distancia_transmi & Dato 5 \\
 \hline
 distancia\_gimnasio & Distancia de la vivienda al gimnasio más cercano \\
-distancia_bar & Dato 5 \\
 \hline
 distancia\_transmi & Distancia de la vivienda a la estación de transmilenio más cercana \\
-distancia_cai & Dato 5 \\
 \hline
 distancia\_SM & Distancia de la vivienda al Supermercado más cercano \\
-distancia_SM & Dato 5 \\
 \hline
 distancia\_colegio & Distancia de la vivienda al colegio más cercano \\
-distancia_colegio & Dato 5 \\
 \hline
 distancia\_hospitales & Distancia de la vivienda al hospital más cercano \\
-distancia_hospitales & Dato 5 \\
 \hline
 month,year & Año-mes  \\
-month,year & Dato 5 \\
 \hline
 lat,lon & Coordenadas de geolocalización de la casa \\
-lat,lon & Dato 5 \\
 \hline
 \end{tabular}
 \end{table}
@@ -323,6 +309,8 @@ lat,lon & Dato 5 \\
 
 \hypertarget{comparativa-con-otros-modelos}{%
 \subsection{Comparativa con otros modelos}\label{comparativa-con-otros-modelos}}
+
+Además del modelo finalmente escogido, se ejecutaron otras técnicas para realizar la predicción de los precios de la vivienda en Chapinero. Se utilizaron para todos los otros modelos las mismas variables explicativas descritas en la tabla anexo. Se estimaron las siguientes técnicas adicionales al random forest: regresión lineal, Elastic net, Boosting y árboles de decisión. Para todos estos modelos, se utiliza un cross-validation con 10 particiones con el fin de
 
 \begin{table}[ht]
 \centering
