@@ -251,9 +251,6 @@ El presente estudio realizó un
 
 # Referencias bibliográficas
 
-
-
-
 ::: {#refs}
 :::
 
