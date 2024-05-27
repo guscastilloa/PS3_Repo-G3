@@ -78,17 +78,18 @@ De igual manera, se utilizó la información de Open Street Map (transporte púb
 
 Con estas fuentes de información se construyeron diferentes modelos para predecir el precio de las viviendas en Chapinero. Estos modelos aplican los conceptos abordados en la clase \textit{Big Data y Machine Learning para Economía Aplicada}, los cuales se describen con mayor detalle en las siguientes secciones. En las siguientes secciones adicionalmente se encuentran: la presentación de las bases de datos utilizadas, presentando a su vez estadísticas descriptivas que facilitan su comprensión; los resultados obtenidos luego de su impelmentación; y unas conclusiones de todo el ejercicio.
 
+Resultados...
 
 # Datos y Métodos
 
 Los datos principales consistieron en los archivos descargados de la página de datos de la [Competencia en Kaggle](https://www.kaggle.com/competitions/uniandes-bdml-202410-ps3). Esta base de datos contiene 48.930 observaciones, distribuidas en 10.286 observaciones para prueba (21\%) y 38.644 para entrenamiento (79\%). Cada observación representa un inmueble para venta publicado en \href{ https://www.properati.com.co/}{Properati} entre 2019 y 2021 en la ciudad de Bogotá. Dentro de las características de cada inmueble se tienen las áreas (construida y cubierta), el número de habitaciones y baños, el tipo de propiedad (casa o apartamento), y el título y descripciónn con el que se hizo la publicación en la página web y localización (latitud y longitud). Dada la estructura de la base de datos es muy probable que se haya construido a través de un ejercicio de \textit{Web Scrapping} y luego se haya dispuesto para su descarga y uso en el Problem Set 3.
-
 
 A partir de las descripciones, se utilizó el análisis de texto para constrastar el tipo de inmueble publicado con el que se encuentra en la descripción, extraer el número de pisos de las casas, e identificar el piso en el que se encuentran los apartamentos. Como se tienen todos los inmuebles para Bogotá, en función de su localización (latitud y longitud), se extrajeron aquellas casas y apartamentos dentro de la localidad de Chapinero. Este ejercio se realizó mediante la extracción los de puntos (capa construida con la latitud y longitud) dentro del polígono de Cahpinero (capa del Ideca).
 
 Utilizando el mismo método de análisis espacial, se utilizaron las capas de Open Street Maps para medir las distancias del inmueble a gimnasios, estaciones de Transmilenio, bares, supermercados, colegios, hospitales, principales avenidas, centros comerciales y universidades.
 
 Como resultado se encontraron 536 observaciones que difieren entre sus descripción (1,2\% en la base de entrenamiento y 0,6\% en la de prueba)
+
 
 ```{r descriptive-tbl, echo=FALSE, results='asis', message=FALSE, out.width="60%", fig.pos='H'}
 library(kableExtra)
