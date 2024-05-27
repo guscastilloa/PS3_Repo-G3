@@ -169,8 +169,63 @@ $$
 Precio= f(\text{características propias}, \text{características del vecindario},\text{variables temporales})
 $$
 
-Siguiendo a @mendieta, se utilizaron tres categorías de variables que capturan atributos que explican el precio de la vivienda. El primero, corresponde a variables que capturan características convencionales d elas viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. El segundo grupo está conformado por características del vecindario que corresponde a criterios de seguridad, por ejemplo, la distancia de la vivienda al Comando de Atención Inmediata(CAI), a criterios de servicios, como la distancia a parques, centros comeciales, instituciones educativas, y de accesibilidad de transporte, por ejemplo, distancia a la estación del transmilenio. Las variables de distancia fueron calculadas utilizando la paqueteria Osmadata del programa R. El tercero, corresponde a factores de geolocalización,como la longitud y la latitud) y temporales, como el mes y el año, debido a que los precios pueden variar por el ciclo económico. A continuación, se presenta una tabla con la descripción de las variables: 
+Siguiendo a @mendieta, se utilizaron tres categorías de variables que capturan atributos que explican el precio de la vivienda. El primero, corresponde a variables que capturan características convencionales de las viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. Los valores faltantes de estas variables se imputaron como la mediana de la muestra con el fin de realizar la predicción. El segundo grupo está conformado por características del vecindario que corresponde a criterios de seguridad, por ejemplo, la distancia de la vivienda al Comando de Atención Inmediata(CAI), a criterios de servicios, como la distancia a parques, centros comeciales, instituciones educativas, y de accesibilidad de transporte, por ejemplo, distancia a la estación del transmilenio. Las variables de distancia fueron calculadas utilizando la paqueteria Osmadata del programa R. El tercero, corresponde a factores de geolocalización,como la longitud y la latitud) y temporales, como el mes y el año, debido a que los precios pueden variar por el ciclo económico. En el anexo A, se puede encontrar la tabla con la descripción de las variables utilizadas.  
 
+             
+## Descripción del modelo
+Utilizando el modelo y las variables mencionadas en el Anexo A, se dividió la base de datos en dos conjuntos(entrenamiento y validación). Los modelos se entrenaron con el conjunto de entranamiento para, posteriormente, realizar la predicción en el conjunto de validación. El criterio para escoger al mejor modelo fue el Error absoluto medio(MAE) que mide la magnitud promedio de los errores de predicción del modelo: 
+
+$$MAE=\frac{1}{N} \sum |precio - \text{precio predicho}|$$
+Por lo tanto, entre menor sea el MAE, mejor desempeño tiene el modelo. Debido a que no se contaba en el conjunto de validación con la información del precio observado, se escogió como mejor modelo aquel con menor MAE reportado en la competencia Kaggle. 
+
+El mejor modelo utilizando esta métrica fue el Random Forest. Este algorito de aprendizaje funciona creando "selvas" de árboles de decisión y promediando las predicciones de los árboles individuales para obtener una predicción final. Este enfoque permite mejorar el desempeño de las predicciones debido a que cada árbol se contruye utilizando un conjunto de datos de entrenamiento y un conjunto aleatorio de variables predictoras, lo que disminuye el sobreajuste y mejora la generalización del modelo. 
+
+Para este informe, se implementó el modelo Random Forest utilizando el paquete "caret" del softaware R. Se incluyeron como variables predictoras las del Anexo A. La estrategia usada para seleccionar los hiperparámetros se basó en la definición de una grilla con diferentes combinaciones posibles, en la que probara de forma aleatoria la cantidad de variables en cada división del árbol(2,3,4,5,8) y el criterio de "variance" para evaluar  la reducción de la varianza de los nodos resultantes de cada árbol. Además, se estableció un tamaño mínimo de los nodos terminales de cada árbol con el fin de prevenir el sobreajuste(1,2,3,6). Finalmente, los parámetros de control para el proceso de entrenamiento fue una configuración de validación cruzada con 10 particicones para evaluar el rendimiento del modelo. 
+
+
+## Comparativa con otros modelos
+Además del modelo finalmente escogido, se ejecutaron otras técnicas para realizar la predicción de los precios de la vivienda en Chapinero. Se utilizaron para todos los otros modelos las mismas variables explicativas descritas en la tabla Anexo. Se estimaron las siguientes técnicas adicionales al Random Forest: regresión lineal, Elastic net, Boosting y árboles de decisión. Para todos estos modelos, se utiliza un cross-validation con 10 particiones con el fin de mejorar la predicción y de evitar el sobreajuste. 
+
+```{r performance2, results='asis', echo=FALSE}
+cat("
+\\begin{table}[ht]
+\\centering
+\\caption{Comparativa con otros modelos}
+\\begin{tabular}{lcccccr}
+\\hline \\hline
+Estadística & Random Forest &  Linear Regression & Elastic Net & Boosting & Decision tree \\\\
+\\hline
+MAE (Kaggle) & 223834975 & 308749889 & 260870545 & 289260591 & 304528484  \\\\
+RMSE & 185392301 & 258160495 & 210281690 & 266505969 & 282794569 \\\\
+MAE(train) & 125757655 & 191380688 & 143548002 & 200055282 & 216060881 \\\\
+\\hline
+\\end{tabular}
+\\end{table}
+")
+```
+
+En la tabla anterior se puede observar el Error Cuadrático Medio (RMSE) para la muestra de entrenamiento, así como el Error absoluto medio (MAE) de la muestra de validación que registró los envíos a la competencia kaggle(debido a que la muestra no tenía la información del precio para estimarla directamente) y de los datos de entrenamiento. Se aprecia que el Random Forest tiene un desempeño sistemáticamente superior en todas las medidas con respecto a los otros modelos. Los siguientes mejores modelos son el Elastic Net, Boosting, regresión lineal y árboles de decisión respectivamente. Estos resultados son esperados en la medida en que el Random Forest permite capturar relaciones no lineales(a diferencia de la regresión lineal y Elastic Net), además de que es más robusto a sobreajuste con respecto a modelos más complejos como el Boosting. 
+
+# Conclusiones
+El presente estudio realizó un ejercicio de predicción del precio de la vivienda para la localidad de Chapinero en Bogotá Utilizando datos de  https://www.properati.com.co. Para construir el modelo, se empleaó información de esta base de datos e información de distancia calculadas a partir de  Open Source Maps (OSM). Se ejecutaron cinco algoritmos de machine learning (Random Forest, Árboles de decisión, regresión lineal, boosting y Elastict Net) y se seleccionó el mejor utilizando como métrica el Error Absoluto Medio (MAE). 
+
+Se encontró que la oferta de bienes inmubles de Chapinero alberga la mayor oferta de universidades en Bogotá, así como dónde se desarrollan mayor actividad comercial. Asimismo, se encontró que el mejor modelo que predice los precios es el Random Forest debido a que permite capturar relaciones no lineales, además de que es más robusto a sobreajuste por la aleatorización de las variables y del conjunto de datos que utiliza para entrenar en la construcción de los árboles. 
+
+Sin embargo, se recomienda seguir estimando modelos que permitan estimar los precios de las viviendas debido a la naturaleza cambiante de este sector. Es importante la predicción de precios debido a que puede servir a las inmobiliarias con el fin de evitar sobreestimación de precios que puedan causar pérdidas económicas. 
+
+# Referencias bibliográficas
+
+::: {#refs}
+:::
+
+# Repositorio
+
+El respositorio se puede consultar en el siguiente enlace:
+\begin{itemize}
+  \item \href{https://github.com/guscastilloa/PS3_Repo-G3}{Problem Set 3: Making Money with ML?}
+\end{itemize}
+
+# Anexo A: Variables utilizadas en el modelo. 
 
 ```{r performance, results='asis', echo=FALSE}
 cat("
@@ -181,6 +236,7 @@ cat("
 \\hline
 Nombre de la variable & Descripción  \\\\
 \\hline
+rooms\\_median & Número de baños de la vivienda \\\\
 \\hline
 bathrooms\\_median & Número de baños de la vivienda \\\\
 \\hline
@@ -218,45 +274,3 @@ lat,lon & Coordenadas de geolocalización de la casa \\\\
 \\end{table}
 ")
 ```
-
-             
-## Descripción del modelo
-
-
-## Comparativa con otros modelos
-Además del modelo finalmente escogido, se ejecutaron otras técnicas para realizar la predicción de los precios de la vivienda en Chapinero. Se utilizaron para todos los otros modelos las mismas variables explicativas descritas en la tabla anexo. Se estimaron las siguientes técnicas adicionales al random forest: regresión lineal, Elastic net, Boosting y árboles de decisión. Para todos estos modelos, se utiliza un cross-validation con 10 particiones con el fin de 
-
-```{r performance2, results='asis', echo=FALSE}
-cat("
-\\begin{table}[ht]
-\\centering
-\\caption{Comparativa con otros modelos}
-\\begin{tabular}{lcccccr}
-\\hline \\hline
-Estadística & Random Forest &  Linear Regression & Elastic Net & Boosting & Decision tree \\\\
-\\hline
-MAE (Kaggle) & 223834975 & 308749889 & 260870545 & 289260591 & 304528484  \\\\
-RMSE & 185392301 & 258160495 & 210281690 & 266505969 & 282794569 \\\\
-MAE(train) & 125757655 & 191380688 & 143548002 & 200055282 & 216060881 \\\\
-\\hline
-\\end{tabular}
-\\end{table}
-")
-```
-
-
-
-# Conclusiones
-El presente estudio realizó un 
-
-# Referencias bibliográficas
-
-::: {#refs}
-:::
-
-# Repositorio
-
-El respositorio se puede consultar en el siguiente enlace:
-\begin{itemize}
-  \item \href{https://github.com/guscastilloa/PS3_Repo-G3}{Problem Set 3: Making Money with ML?}
-\end{itemize}
