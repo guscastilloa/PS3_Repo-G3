@@ -161,9 +161,20 @@ Para la localidad de Chapinero, luego del procedimiento anterior, se obtuvo una 
 
 Sobre este último hallazgo, esta oferta de bienes inmuebles puede estar caracterizada por casas o apartamentos más alejadas de las zonas con mayor flujo de población flotante. Al ser una localidad en la que en su centralidad alberga la mayor oferta de universidades de Bogotá, así como donde se desarrollan actividades comerciales, los inmuebles destinados a usos residenciales que se ofrecen en el mercado se encuentran más alejados de esta centralidad. Claro está, se tiene una heterogénea composición, pues como se observa en la tabla anterior aproximadante las desviaciones estándar de las distancias son la mitad de los valores promedio, y se obtienen distancia en un rango de entre 0 m 3 km.  
 
+
+## Imputación de Datos Faltantes y **Data leakage**
+
+Las variables del número de baños, de habitaciónes, de la superficie cubierta (`surface_covered`) y de superficie total (`surface_total`) presentaban muchos valores faltantes. Como se observa en el cuadro a continuación:
+```{r, echo=FALSE, results='asis'}
+cat(readLines(here("views/tables/code.tex")), sep = "\n")
+```
+
+Por esta razón procedimos a hacer 3 tipos de imputaciones: con el promeido, la mediana y $k$ vecinos cercanos (kNN). Sin embargo, al revisar con detenimiento el ejercicio de imputación de datos faltantes (**missing values**), caímos en cuenta de que todas las imputaciones de los valores faltantes que se usaron (promedio, mediana, K-vecinos cercanos) se hicieron sin tener en cuenta que los datos de entrenamiento no debían tener nada de información relacionada con los datos de prueba. Al observar con detenimiento la imputación realizada observamos que tanto la media como la mediana de las variables a las que se les imputaron datos fueron calculadas sobre el conjunto de datos unidos, tanto los de entrentamiento como los de prueba. Lo mismo ocurrió con el algoritmo de kNN. En ese sentido nuestro conjunto de datos de entrenamiento obtuvo información "colada" (**leaked in**) de los datos de prueba, lo que pudo comprometer la calidad de las predicciones.
+
 ```{r grap01, echo=FALSE, message=FALSE, out.width="70%" , message=FALSE, fig.cap="Precio en M2 en Chapinero (precio por millones)", dpi=300}
 knitr::include_graphics('../views/g2.jpeg')
 ```
+
 
 # Modelo y resultados
 
@@ -281,3 +292,54 @@ lat,lon & Coordenadas de geolocalización de la casa \\\\
 \\end{table}
 ")
 ```
+
+             
+## Descripción del modelo
+
+
+## Comparativa con otros modelos
+Además del modelo finalmente escogido, se ejecutaron otras técnicas para realizar la predicción de los precios de la vivienda en Chapinero. Se utilizaron para todos los otros modelos las mismas variables explicativas descritas en la tabla anexo. Se estimaron las siguientes técnicas adicionales al random forest: regresión lineal, Elastic net, Boosting y árboles de decisión. Para todos estos modelos, se utiliza un cross-validation con 10 particiones con el fin de 
+
+
+También en algunos modelos se ajustaron los hiperparámetros utilizando validación cruzada espacial para corregir la potencial autocorrelación espacial presente en los datos. Los **folds** consistieron en las diferentes localidades de Bogotá, a excepción de Chapinero. 
+
+
+
+
+```{r performance2, results='asis', echo=FALSE}
+cat("
+\\begin{table}[ht]
+\\centering
+\\caption{Comparativa con otros modelos}
+\\begin{tabular}{lcccccr}
+\\hline \\hline
+Estadística & Random Forest &  Linear Regression & Elastic Net & Boosting & Decision tree \\\\
+\\hline
+MAE (Kaggle) & 223834975 & 308749889 & 260870545 & 289260591 & 304528484  \\\\
+RMSE & 185392301 & 258160495 & 210281690 & 266505969 & 282794569 \\\\
+MAE(train) & 125757655 & 191380688 & 143548002 & 200055282 & 216060881 \\\\
+\\hline
+\\end{tabular}
+\\end{table}
+")
+```
+
+
+
+# Conclusiones
+El presente estudio realizó un 
+
+# Referencias bibliográficas
+
+
+
+
+::: {#refs}
+:::
+
+# Repositorio
+
+El respositorio se puede consultar en el siguiente enlace:
+\begin{itemize}
+  \item \href{https://github.com/guscastilloa/PS3_Repo-G3}{Problem Set 3: Making Money with ML?}
+\end{itemize}
