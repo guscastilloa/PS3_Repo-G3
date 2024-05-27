@@ -85,6 +85,10 @@ En las siguientes secciones, se presentan las bases de datos utilizadas y las tr
 
 Los datos principales consistieron en los archivos descargados de la página de datos de la [Competencia en Kaggle](https://www.kaggle.com/competitions/uniandes-bdml-202410-ps3). Esta base de datos contiene 48.930 observaciones, distribuidas en 10.286 observaciones para prueba (21\%) y 38.644 para entrenamiento (79\%). Cada observación representa un inmueble para venta publicado en \href{ https://www.properati.com.co/}{Properati} entre 2019 y 2021 en la ciudad de Bogotá. Dentro de las características de cada inmueble se tienen las áreas (construida y cubierta), el número de habitaciones y baños, el tipo de propiedad (casa o apartamento), y el título y descripciónn con el que se hizo la publicación en la página web y localización (latitud y longitud). Dada la estructura de la base de datos es muy probable que se haya construido a través de un ejercicio de \textit{Web Scrapping} y luego se haya dispuesto para su descarga y uso en el Problem Set 3.
 
+```{r grap00, echo=FALSE, message=FALSE, out.width="70%" , message=FALSE, fig.cap="Distribución del precio de las viviendas (log)", dpi=300}
+knitr::include_graphics('../views/g1.jpg')
+```
+
 A partir de las descripciones, se utilizó el análisis de texto para constrastar el tipo de inmueble publicado con el que se encuentra en la descripción, extraer el número de pisos de las casas, e identificar el piso en el que se encuentran los apartamentos. Como se tienen todos los inmuebles para Bogotá, en función de su localización (latitud y longitud), se extrajeron aquellas casas y apartamentos dentro de la localidad de Chapinero. Este ejercio se realizó mediante la extracción los de puntos (capa construida con la latitud y longitud) dentro del polígono de Cahpinero (capa del Ideca). Al cruzar la capa de los polígonos las localidades con la tabla de *test* observamos que 593 propiedades se encuentran fuera de Chapinero (Figura \@ref(fig:train-chapi-dots)), que es la localidad en la cuál se predecirán los precios de las viviendas. 
 
 ```{r train-chapi-dots, echo=FALSE, message=FALSE, out.width="70%" , message=FALSE, fig.cap="Ubicación datos de validación", dpi=300}
@@ -157,6 +161,9 @@ Para la localidad de Chapinero, luego del procedimiento anterior, se obtuvo una 
 
 Sobre este último hallazgo, esta oferta de bienes inmuebles puede estar caracterizada por casas o apartamentos más alejadas de las zonas con mayor flujo de población flotante. Al ser una localidad en la que en su centralidad alberga la mayor oferta de universidades de Bogotá, así como donde se desarrollan actividades comerciales, los inmuebles destinados a usos residenciales que se ofrecen en el mercado se encuentran más alejados de esta centralidad. Claro está, se tiene una heterogénea composición, pues como se observa en la tabla anterior aproximadante las desviaciones estándar de las distancias son la mitad de los valores promedio, y se obtienen distancia en un rango de entre 0 m 3 km.  
 
+```{r grap01, echo=FALSE, message=FALSE, out.width="70%" , message=FALSE, fig.cap="Precio en M2 en Chapinero (precio por millones)", dpi=300}
+knitr::include_graphics('../views/g2.jpg')
+```
 
 # Modelo y resultados
 
