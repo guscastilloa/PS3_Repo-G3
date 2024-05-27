@@ -167,7 +167,7 @@ Para todos los modelos utilizados para la predicción, se utilizó el siguiente 
 $$
 Precio= f(\text{características propias}, \text{características del vecindario},\text{variables temporales})
 $$
-<<<<<<< Updated upstream
+
 
 Siguiendo a @mendieta, se utilizaron tres categorías de variables que capturan atributos que explican el precio de la vivienda. El primero, corresponde a variables que capturan características convencionales d elas viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. El segundo grupo está conformado por características del vecindario que corresponde a criterios de seguridad, por ejemplo, la distancia de la vivienda al Comando de Atención Inmediata(CAI), a criterios de servicios, como la distancia a parques, centros comeciales, instituciones educativas, y de accesibilidad de transporte, por ejemplo, distancia a la estación del transmilenio. Las variables de distancia fueron calculadas utilizando la paqueteria Osmadata del programa R. A continuación, se presenta una tabla con la descripción de las variables: 
 
@@ -189,7 +189,6 @@ bathrooms\\_median & Número de baños de la vivienda \\\\
 surface\\_total\\_median & Área total de la vivienda  \\\\
 \\hline
 property\\_type & =1 si la vivienda corresponde a una casa \\\\
-distancia\\_avenida_\\principal & Dato 5 \\\\
 \\hline
 distancia\\_parque & Distancia de la vivienda al parque más cercano \\\\
 \\hline
