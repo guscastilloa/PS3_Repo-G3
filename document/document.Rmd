@@ -84,11 +84,13 @@ Resultados...
 
 Los datos principales consistieron en los archivos descargados de la página de datos de la [Competencia en Kaggle](https://www.kaggle.com/competitions/uniandes-bdml-202410-ps3). Esta base de datos contiene 48.930 observaciones, distribuidas en 10.286 observaciones para prueba (21\%) y 38.644 para entrenamiento (79\%). Cada observación representa un inmueble para venta publicado en \href{ https://www.properati.com.co/}{Properati} entre 2019 y 2021 en la ciudad de Bogotá. Dentro de las características de cada inmueble se tienen las áreas (construida y cubierta), el número de habitaciones y baños, el tipo de propiedad (casa o apartamento), y el título y descripciónn con el que se hizo la publicación en la página web y localización (latitud y longitud). Dada la estructura de la base de datos es muy probable que se haya construido a través de un ejercicio de \textit{Web Scrapping} y luego se haya dispuesto para su descarga y uso en el Problem Set 3.
 
-A partir de las descripciones, se utilizó el análisis de texto para constrastar el tipo de inmueble publicado con el que se encuentra en la descripción, extraer el número de pisos de las casas, e identificar el piso en el que se encuentran los apartamentos. Como se tienen todos los inmuebles para Bogotá, en función de su localización (latitud y longitud), se extrajeron aquellas casas y apartamentos dentro de la localidad de Chapinero. Este ejercio se realizó mediante la extracción los de puntos (capa construida con la latitud y longitud) dentro del polígono de Cahpinero (capa del Ideca).
+A partir de las descripciones, se utilizó el análisis de texto para constrastar el tipo de inmueble publicado con el que se encuentra en la descripción, extraer el número de pisos de las casas, e identificar el piso en el que se encuentran los apartamentos. Como se tienen todos los inmuebles para Bogotá, en función de su localización (latitud y longitud), se extrajeron aquellas casas y apartamentos dentro de la localidad de Chapinero. Este ejercio se realizó mediante la extracción los de puntos (capa construida con la latitud y longitud) dentro del polígono de Cahpinero (capa del Ideca). Al cruzar la capa de los polígonos las localidades con la tabla de *test* observamos que 593 propiedades se encuentran fuera de Chapinero (Figura \@ref(fig:train-chapi-dots)), que es la localidad en la cuál se predecirán los precios de las viviendas. 
 
-Utilizando el mismo método de análisis espacial, se utilizaron las capas de Open Street Maps para medir las distancias del inmueble a gimnasios, estaciones de Transmilenio, bares, supermercados, colegios, hospitales, principales avenidas, centros comerciales y universidades.
+```{r train-chapi-dots, echo=FALSE, message=FALSE, out.width="70%" , message=FALSE, fig.cap="Ubicación datos de validación", dpi=300}
+knitr::include_graphics(here('views/figures/train_dots.pdf'))
+```
 
-Como resultado se encontraron 536 observaciones que difieren entre sus descripción (1,2\% en la base de entrenamiento y 0,6\% en la de prueba)
+Utilizando el mismo método de análisis espacial, se utilizaron las capas de Open Street Maps para medir las distancias del inmueble a gimnasios, estaciones de Transmilenio, bares, supermercados, colegios, hospitales, principales avenidas, centros comerciales y universidades.Las principales estasdísticas descriptivas según los tipos de bienes inmuebles se ven a continuación:
 
 
 ```{r descriptive-tbl, echo=FALSE, results='asis', message=FALSE, out.width="60%", fig.pos='H'}
@@ -146,12 +148,6 @@ knitr::kable(summary_list, align = "llcccc", digits=1, "latex",
 ```
 
 
-La información espacial de referencia se tomó del Mapa de Referencia para Bogotá D.C. del Ideca disponible [aquí](https://www.ideca.gov.co/recursos/mapas/mapa-de-referencia-para-bogota-dc). Al cruzar la capa de los polígonos las localidades con la tabla de *test* observamos que 593 propiedades se encuentran fuera de Chapinero (Figura \@ref(fig:train-chapi-dots)), que es la localidad en la cuál se predecirán los precios de las viviendas. 
-
-```{r train-chapi-dots, echo=FALSE, message=FALSE, out.width="70%" , message=FALSE, fig.cap="Ubicación datos de validación", dpi=300}
-knitr::include_graphics(here('views/figures/train_dots.pdf'))
-```
-
 # Modelo y resultados
 
 En esta sección se exponen los modelos que se utilizaron para predecir los precios de la vivienda en la localidad de Chapinero, las variables utilizadas en los modelos y la selección de hiperparámetros. En particular, se utilizaron los modelos de bosques, bosques aleatorios, regresión lineal, elasticnet y boosting para realizar la predicción. Finalmente, se presenta una comparación del rendimiento de estos modelos. El mejor resultado se obtuvo con el modelo de Random Forest utilizando como métrica el Mean Absolute Error metric (MAE).  
@@ -162,7 +158,7 @@ Para todos los modelos utilizados para la predicción, se utilizó el siguiente 
 $$
 Precio= f(\text{características propias}, \text{características del vecindario},\text{variables temporales})
 $$
-Siguiendo a @mendieta, se utilizaron tres categorías de variables que capturan atributos que explican el precio de la vivienda. El primero, corresponde a variables que capturan características convencionales d elas viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. El segundo grupo está conformado por características del vecindario que corresponde a criterios de seguridad, por ejemplo, la distancia de la vivienda al Comando de Atención Inmediata(CAI), a criterios de servicios, como la distancia a parques, centros comeciales, instituciones educativas, y de accesibilidad de transporte, por ejemplo, distancia a la estación del transmilenio. Las variables de distancia fueron calculadas utilizando la paqueteria Osmadata del programa R. El tercero, corresponde a factores de geolocalización,como la longitud y la latitud) y temporales, como el mes y el año, debido a que los precios pueden variar por el ciclo económico. A continuación, se presenta una tabla con la descripción de las variables: 
+Siguiendo a @mendieta, se utilizaron tres categorías de variables que capturan atributos que explican el precio de la vivienda. El primero, corresponde a variables que capturan características convencionales d elas viviendas como el número de habitaciones, el número de baños, la superficie total y el tipo de propiedad. El segundo grupo está conformado por características del vecindario que corresponde a criterios de seguridad, por ejemplo, la distancia de la vivienda al Comando de Atención Inmediata(CAI), a criterios de servicios, como la distancia a parques, centros comeciales, instituciones educativas, y de accesibilidad de transporte, por ejemplo, distancia a la estación del transmilenio. Las variables de distancia fueron calculadas utilizando la paqueteria Osmadata del programa R. A continuación, se presenta una tabla con la descripción de las variables: 
 
 ```{r, results='asis', echo=FALSE}
 cat("
@@ -173,39 +169,63 @@ cat("
 \\hline
 Nombre de la variable & Descripción  \\\\
 \\hline
-rooms\\_median & Número de habitaciones de la vivienda  \\\\
+rooms_median & Dato 2  \\\\
 \\hline
-bathrooms\\_median & Número de baños de la vivienda \\\\
+bathrooms_median & Dato 5 \\\\
 \\hline
-surface\\_total\\_median & Área total de la vivienda  \\\\
+surface_total_median & Dato 2  \\\\
 \\hline
-property\\_type & =1 si la vivienda corresponde a una casa \\\\
+property_type & Dato 5 \\\\
 \\hline
-distancia\\_parque & Distancia de la vivienda al parque más cercano \\\\
 \\hline
-distancia\\_comercial & Distancia de la vivienda al cento comercial más cercano \\\\
+rooms_median & Dato 2  \\\\
 \\hline
-distancia\\_avenida\\_principal & Distancia de la vivienda a la avenida principal\\\\
+Dato 4 & Dato 5 \\\\
 \\hline
-distancia\\_universidad & Distancia de la vivienda a la universidad más cercana \\\\
 \\hline
-distancia\\_cai & Distancia de la vivienda al CAI de policía más cercano \\\\
+rooms_median & Dato 2  \\\\
 \\hline
-distancia\\_bar & Distancia de la vivienda al bar más cercano \\\\
+Dato 4 & Dato 5 \\\\
 \\hline
-distancia\\_gimnasio & Distancia de la vivienda al gimnasio más cercano \\\\
 \\hline
-distancia\\_transmi & Distancia de la vivienda a la estación de transmilenio más cercana \\\\
+rooms_median & Dato 2  \\\\
 \\hline
-distancia\\_SM & Distancia de la vivienda al Supermercado más cercano \\\\
+Dato 4 & Dato 5 \\\\
 \\hline
-distancia\\_colegio & Distancia de la vivienda al colegio más cercano \\\\
 \\hline
-distancia\\_hospitales & Distancia de la vivienda al hospital más cercano \\\\
+rooms_median & Dato 2  \\\\
 \\hline
-month,year & Año-mes  \\\\
+distancia_parque & Dato 5 \\\\
 \\hline
-lat,lon & Coordenadas de geolocalización de la casa \\\\
+\\hline
+distancia_comercial & Dato 2  \\\\
+\\hline
+distancia_avenida_principal & Dato 5 \\\\
+\\hline
+\\hline
+distancia_universidad & Dato 2  \\\\
+\\hline
+distancia_cai & Dato 5 \\\\
+\\hline
+distancia_bar & Dato 5 \\\\
+\\hline
+distancia_gimnasio & Dato 5 \\\\
+\\hline
+distancia_transmi & Dato 5 \\\\
+\\hline
+distancia_bar & Dato 5 \\\\
+\\hline
+distancia_cai & Dato 5 \\\\
+\\hline
+distancia_SM & Dato 5 \\\\
+\\hline
+distancia_colegio & Dato 5 \\\\
+\\hline
+distancia_hospitales & Dato 5 \\\\
+\\hline
+month,year & Dato 5 \\\\
+\\hline
+lat,lon & Dato 5 \\\\
 \\hline
 \\end{tabular}
 \\end{table}
