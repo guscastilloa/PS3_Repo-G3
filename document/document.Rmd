@@ -42,7 +42,7 @@ csl: apa.csl
 
 ```{r setup, include=FALSE, echo=FALSE}
 require(here)
-knitr::opts_chunk$set(echo = TRUE, fig.pos = 'H')
+knitr::opts_chunk$set(echo = TRUE, fig.pos = 'H', warning = FALSE, message = FALSE)
 
 fix_textable_ref <- function(refname, tex_table){
   s <- paste0(fixed("\\caption\\{(\\\\#tab:"), refname, ")")
@@ -89,6 +89,61 @@ A partir de las descripciones, se utilizó el análisis de texto para constrasta
 Utilizando el mismo método de análisis espacial, se utilizaron las capas de Open Street Maps para medir las distancias del inmueble a gimnasios, estaciones de Transmilenio, bares, supermercados, colegios, hospitales, principales avenidas, centros comerciales y universidades.
 
 Como resultado se encontraron 536 observaciones que difieren entre sus descripción (1,2\% en la base de entrenamiento y 0,6\% en la de prueba)
+
+```{r descriptive-tbl, echo=FALSE, results='asis', message=FALSE, out.width="60%", fig.pos='H'}
+library(kableExtra)
+stats <- arrow::read_parquet("../stores/db3.parquet")
+
+var <- c("price","surface_covered","surface_total","rooms", "bathrooms",
+         "bedrooms","n_pisos_num","piso_numerico",
+         "distancia_parque","distancia_transmi",
+         "distancia_bar","distancia_colegio",
+         "distancia_avenida_principal","distancia_universidad",
+         "distancia_gimnasio","distancia_cai","distancia_SM",
+         "distancia_hospitales","distancia_comercial")
+
+stats <- data.frame(stats%>%
+                      filter(is_chapinero=="Chapinero")%>%
+                      select(var, "is_train","operation_type","property_type")
+)
+
+stats$price <- stats$price/1000000
+
+summary_list <- list()
+
+for (variable in var) {
+  stats[[variable]] <- as.numeric(stats[[variable]])
+  summary_data <- stats %>%
+    group_by(property_type) %>%
+    summarise(mean = mean(!!sym(variable), na.rm = TRUE),
+              sd = sd(!!sym(variable), na.rm = TRUE),
+              min = min(!!sym(variable), na.rm = TRUE),
+              max = max(!!sym(variable), na.rm = TRUE))
+  summary_list[[variable]] <- summary_data
+}
+
+summary_list <- bind_rows(summary_list, .id = "variable")
+
+summary_list$variable <- factor(summary_list$variable,
+                                levels=var,
+                                labels=c("Precio (millones)","Área cubierta",
+                                         "Área total","Habitaciones","Baños",
+                                         "Dromitorios","Número de pisos", "Piso",
+                                         "Dist. parque", "Dist. Transmilenio",
+                                         "Dist. bar","Dist. colegio",
+                                         "Dist. avenida","Dist. universidad",
+                                         "Dist. gimnasio","Dist. CAI",
+                                         "Dist. supermercados",
+                                         "Dist. hospitales",
+                                         "Dist. centro comercial")
+                                )
+colnames(summary_list) <- c("Variable", "Tipo", "Promedio", "Desv. est.",
+                            "Mín", "Máx.")
+knitr::kable(summary_list, align = "llcccc", digits=1, "latex", 
+             caption = "Estadísticas descriptivas")%>%
+      kable_styling(latex_options = "hold_position")
+```
+
 
 La información espacial de referencia se tomó del Mapa de Referencia para Bogotá D.C. del Ideca disponible [aquí](https://www.ideca.gov.co/recursos/mapas/mapa-de-referencia-para-bogota-dc). Al cruzar la capa de los polígonos las localidades con la tabla de *test* observamos que 593 propiedades se encuentran fuera de Chapinero (Figura \@ref(fig:train-chapi-dots)), que es la localidad en la cuál se predecirán los precios de las viviendas. 
 
