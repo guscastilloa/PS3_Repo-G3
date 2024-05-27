@@ -76,9 +76,10 @@ Ahora bien, para construir el o los modelos se utilizó una muestra de los anunc
 
 De igual manera, se utilizó la información de Open Street Map (transporte público, comercio, equipamentos colectivos, y vías y trasnporte público), la cual permitió asociar información geográfica relevante a la muestra de \href{ https://www.properati.com.co/}{Properati}. Así como se utilizó también la información de la página web Infraestructura de Datos Espaciales de Bogotá (Ideca), un portal de libre acceso y consulta de la Unidad Administrativa Especial de Catastro Distrital (UAECD), de donde se utilizaron las bases de datos (capas) de las localidades de Bogotá
 
-Con estas fuentes de información se construyeron diferentes modelos para predecir el precio de las viviendas en Chapinero. Estos modelos aplican los conceptos abordados en la clase \textit{Big Data y Machine Learning para Economía Aplicada}, los cuales se describen con mayor detalle en las siguientes secciones. En las siguientes secciones adicionalmente se encuentran: la presentación de las bases de datos utilizadas, presentando a su vez estadísticas descriptivas que facilitan su comprensión; los resultados obtenidos luego de su impelmentación; y unas conclusiones de todo el ejercicio.
+Con estas fuentes de información se construyeron diferentes modelos para predecir el precio de las viviendas en Chapinero. Estos modelos aplican los conceptos abordados en la clase \textit{Big Data y Machine Learning para Economía Aplicada}; más concretamente, se utilizaron técnicas \textit{Ramdon forest}, regresión lineal, \textit{Elastic Net}, \textit{Boosting} y \textit{Decission tree}, utilizándose el error absoluto medio (MAE por sus siglas en inglés) como criterio de selección del modelo fuera de muestra. En cuyo caso, dados los resultados obtenidos en \textit{kaggle} se optó por el modelo \textit{Random Forest}, como se explicará más adelante.
 
-Resultados...
+En las siguientes secciones, se presentan las bases de datos utilizadas y las trasnformaciones, presentando a su vez estadísticas descriptivas que facilitan su comprensión; la descripción del modelo utilizado; los resultados obtenidos luego de su implementación; y unas conclusiones de todo el ejercicio.
+
 
 # Datos y Métodos
 
@@ -129,21 +130,21 @@ summary_list <- bind_rows(summary_list, .id = "variable")
 summary_list$variable <- factor(summary_list$variable,
                                 levels=var,
                                 labels=c("Precio (millones)",
-                                         "Área cubierta ($km^2$)",
-                                         "Área total ($km^2$)",
+                                         "Área cubierta (km2)",
+                                         "Área total (km2)",
                                          "Habitaciones","Baños",
                                          "Dromitorios","Número de pisos", "Piso",
-                                         "Dist. parque ($km$)", 
-                                         "Dist. Transmilenio ($km$)",
-                                         "Dist. bar ($km$)",
-                                         "Dist. colegio ($km$)",
-                                         "Dist. avenida ($km$)",
-                                         "Dist. universidad ($km$)",
-                                         "Dist. gimnasio ($km$)",
-                                         "Dist. CAI($km$)",
-                                         "Dist. supermercados ($km$)",
-                                         "Dist. hospitales ($km$)",
-                                         "Dist. centro comercial ($km$)")
+                                         "Dist. parque (km)", 
+                                         "Dist. Transmilenio (km)",
+                                         "Dist. bar (km)",
+                                         "Dist. colegio (km)",
+                                         "Dist. avenida (km)",
+                                         "Dist. universidad (km)",
+                                         "Dist. gimnasio (km)",
+                                         "Dist. CAI(km)",
+                                         "Dist. supermercados (km)",
+                                         "Dist. hospitales (km)",
+                                         "Dist. centro comercial (km)")
 )
 colnames(summary_list) <- c("Variable", "Promedio", "Desv. est.",
                             "Mín", "Máx.")
